@@ -1,0 +1,79 @@
+
+@use './common/color' as *;
+@use './common/size' as *;
+@use './mixins/var' as *;
+@use './mixins/function' as *;
+@use './mixins/bem.scss' as *;
+@use 'sass:map';
+@import '../public/fonts/font.css';
+
+:root {
+  // color
+  @include define-css-var('color-white', $color-white);
+  @include define-css-var('color-black', $color-black);
+  @include define-css-var('color-transparent', $color-transparent);
+  @include define-css-var('color-mark', $color-mark);
+  
+  // 设置全局颜色的 css 变量
+  // color-primary / color-success / ...
+  @each $type in (primary, success, warning, danger, error, info) {
+    @include define-css-var-color($colors, $type);
+  }
+
+  // text-color
+  @include define-css-var-comp('text-color', $text-color);
+  // fill-color
+  @include define-css-var-comp('fill-color', $fill-color);
+  // border-color
+  @include define-css-var-comp('border-color', $border-color);
+}
+
+:root {
+  @include define-css-var-comp('font-size', $font-size);
+  @include define-css-var-comp('border-radius', $border-radius);
+  @include define-css-var-comp('component-size', $component-size);
+
+  @include define-css-var('border-width', $border-width);
+  @include define-css-var('border-style', $border-style);
+  @include define-css-var(
+    'border', 
+    getCssVar('border-width') getCssVar('border-style') getCssVar('border-color')
+  )
+}
+
+:root {
+  font-size: 16px;
+}
+
+body {
+  color: getCssVar('text-color', 'primary');
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+@include b(icon) {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  user-select: none;
+  transition: transform 0.2s ease-in-out;
+
+  @include when(rotate) {
+    transform: rotateZ(-90deg);
+  }
+}
+
+
+a {
+  // position:relative;
+  color: inherit;
+  text-decoration: none;
+}
+

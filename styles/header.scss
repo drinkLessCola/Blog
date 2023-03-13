@@ -1,0 +1,58 @@
+@use './mixins/bem.scss' as *;
+@use './mixins/function.scss' as *;
+
+@include b(header) {
+  grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // border-bottom: 1px solid #eee;
+  background-color: getCssVar('fill-color', 'alpha');
+  // backdrop-filter: blur(5px);
+  // @include e(title) {
+  //   font-size: 24px;
+  //   font-family: 'Kristen ITC';
+  // }
+
+  @include e(title) {
+
+    #drinkLessCola {
+      width: 50%;
+      height: 50%;
+      object-fit: contain;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges; /* Firefox */
+      image-rendering: -o-crisp-edges; /* Opera */
+      image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+      image-rendering: crisp-edges;
+      -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+    }
+  }
+}
+
+@include b(navbar) {
+  li {
+    // background-color: getCssVar('color-primary', 'light-5');
+    border-radius: 5px;
+    margin: 0 5px;
+    // color: getCssVar('text-color', 'primary');
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+
+
+
+// .nav {
+//   ul {
+//     display: flex;
+//     justify-content: space-around;
+//     align-items: center;
+//   }
+//   li {
+//     margin: 0 10px;
+//     padding: 5px 10px;
+//   }
+// }

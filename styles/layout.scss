@@ -1,0 +1,69 @@
+@use './mixins/bem.scss' as *;
+@use './mixins/function' as *;
+
+@include b(layout) {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: grid-template-columns .3s linear;
+  background-image: url('/background.jpg');
+
+  @media screen and (max-width: 1536px) {
+    grid-template-rows: 50px minmax(0, 1fr) fit-content(100px);
+    grid-template-columns: minmax(200px, 320px) minmax(0, 1fr);
+    grid-template-areas: 
+      "header header"
+      "sidebar main"
+      "sidebar footer";
+  }
+
+  @media screen and (max-width: 1280px) {
+    grid-template-rows: 50px minmax(0, 1fr) fit-content(100px);
+    grid-template-columns: minmax(200px, 320px) minmax(0, 1fr);
+    grid-template-areas: 
+      "header header"
+      "sidebar main"
+      "sidebar footer";
+  }
+  
+  @media screen and (max-width: 1024px) {
+    grid-template-rows: 50px minmax(0, 1fr) fit-content(100px);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 
+      "header"
+      "main"
+      "footer";
+  }
+  
+  @media screen and (max-width: 768px) {
+    grid-template-rows: 50px minmax(0, 1fr) fit-content(100px);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 
+      "header"
+      "main"
+      "footer";
+  }
+  
+  @media screen and (max-width: 640px) {
+    font-size: 14px;
+    grid-template-rows: 50px minmax(0, 1fr) fit-content(100px);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 
+      "header"
+      "main"
+      "footer";
+  }
+
+  @include when(wrap-sidebar) {
+    @media screen and (max-width: 1536px) {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+    @media screen and (max-width: 768px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+

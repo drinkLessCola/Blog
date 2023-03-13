@@ -1,0 +1,119 @@
+@use '../common/config';
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:list';
+
+@function joinVarName($list) {
+  $name: '--' + config.$namespace;
+  @each $item in $list {
+    @if $item != '' {
+      $name: $name + '-' + $item;
+    }
+  } 
+  @return $name;
+} 
+
+@function getCssVar($name-list...) {
+  @return var(#{joinVarName($name-list)});
+}
+
+
+
+/* HSV */
+
+// 根据 RGB 值获取指定的颜色
+@function color-rgb($R: 0, $G: 0, $B: 0) {
+  @return color.adjust($color:#000000, $red: $R, $green: $G, $blue: $B);
+}
+
+// RGB 颜色转换为 HSV
+@function RGBToHSV($R, $G, $B) {
+  $color: color-rgb($R, $G, $B);
+  $R: math.div($R, 255);
+  $G: math.div($G, 255);
+  $B: math.div($B, 255);
+  $max: math.max($R, $G, $B);
+  $min: math.min($R, $G, $B);
+
+  $H: color.hue($color);
+  $S: 0;
+  $V: $max;
+
+  @if($max == 0) {
+    $S: 0;
+  } @else {
+    $S: math.div($max - $min, $max);
+  }
+
+  @return ($H, $S, $V);
+}
+
+// HSV 颜色转换为 RGB
+@function HSVToRGB($H, $S, $V) {
+  $C: $V * $S;
+  $X: $C * (1 - math.abs(math.div($H, 60deg) % 2 - 1));
+  $m: $V - $C;
+
+  $R: 0;
+  $G: 0;
+  $B: 0;
+  @if($H >= 0deg and $H < 60deg) {
+    $R: $C;
+    $G: $X;
+    $B: 0;
+  } @else if($H >= 60deg and $H < 120deg) {
+    $R: $X;
+    $G: $C;
+    $B: 0;
+  } @else if($H >= 120deg and $H < 180deg) {
+    $R: 0;
+    $G: $C;
+    $B: $X;
+  } @else if($H >= 180deg and $H < 240deg) {
+    $R: 0;
+    $G: $X;
+    $B: $C;
+  } @else if($H >= 240deg and $H < 300deg) {
+    $R: $X;
+    $G: 0;
+    $B: $C;
+  } @else if($H >= 300deg and $H < 360deg) {
+    $R: $C;
+    $G: 0;
+    $B: $X;
+  }
+  $R: math.round(($R + $m) * 255);
+  $G: math.round(($G + $m) * 255);
+  $B: math.round(($B + $m) * 255);
+
+  @return ($R, $G, $B);
+}
+
+// 获取颜色的 RGB 值
+@function getColorRGB($color) {
+  $R: color.red($color);
+  $G: color.green($color);
+  $B: color.blue($color);
+  @return ($R, $G, $B); 
+}
+
+// 以 HSV 模式调整颜色
+@function adjustColorHSV(
+  $color, 
+  $hue: 0deg, 
+  $saturation: 0%, 
+  $value: 0%,
+) {
+  $colorRGB: getColorRGB($color);
+  $colorHSV: RGBToHSV($colorRGB...);
+
+  $H: (list.nth($colorHSV, 1) + $hue + 360deg) % 360;
+  $S: list.nth($colorHSV, 2);
+  @if ($S != 0) { // 灰色不增加饱和度
+    $S: math.min(list.nth($colorHSV, 2) + math.div($saturation, 100%), 1);
+  }
+  $V: math.min(list.nth($colorHSV, 3) + math.div($value, 100%), 1);
+
+  $enhancedColor: color-rgb(HSVToRGB($H, $S, $V)...);
+  @return $enhancedColor;
+}

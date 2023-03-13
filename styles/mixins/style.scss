@@ -1,0 +1,14 @@
+@use './function.scss' as *;
+@mixin menuStyle() {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  a {
+    // position:relative;
+    color: inherit;
+    text-decoration: none;
+  }
+}

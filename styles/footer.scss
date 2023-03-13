@@ -1,0 +1,5 @@
+@use './mixins/bem.scss' as *;
+
+@include b(footer) {
+  grid-area: footer;
+}

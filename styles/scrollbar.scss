@@ -1,0 +1,60 @@
+@use './mixins/bem' as *;
+
+@include b(scrollbar) {
+  // --ice-thumb-size: 10px;
+  position: relative;
+  overflow: hidden;
+
+
+  @include e(wrap) {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+    vertical-align: middle;
+    // 会导致 scrollTop 始终为 0
+    // scroll-behavior: smooth;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  @include e(bar) {
+    position: absolute;
+
+    @include when(horizontal) {
+      width: calc(100% - var(--ice-thumb-size));
+      height: var(--ice-thumb-size);
+      bottom: 0;
+      left: 0;
+
+      & > .blogScrollbar_thumb {
+        height: 100%;
+      }
+
+    }
+  
+    @include when(vertical) {
+      width: var(--ice-thumb-size);
+      height: calc(100% - var(--ice-thumb-size));
+      right: 0;
+      top: 0;
+
+      & > .blogScrollbar_thumb {
+        width: 100%;
+      }
+    }
+  }
+
+  @include e(thumb) {
+    position: absolute;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+}

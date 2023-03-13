@@ -1,0 +1,33 @@
+@use './function' as *;
+@use 'sass:map';
+
+@mixin define-css-var($name, $value) {
+  #{joinVarName($name)}: #{$value};
+}
+
+@mixin define-css-var-color($colors, $type) {
+  @include define-css-var(('color', $type), map.get($colors, $type, 'base'));
+  @include define-css-var(('color', $type, 'dark'), map.get($colors, $type, 'dark'));
+  @include define-css-var(('color', $type, 'darker'), map.get($colors, $type, 'darker'));
+
+  @each $i in (1, 3, 5, 7, 9) {
+    @include define-css-var(('color', $type, 'light', $i), map.get($colors, $type, 'light-#{$i}'));
+  }
+}
+
+@mixin css-var-from-global($varName, $globalVar) {
+  #{joinVarName($varName)}: var(#{joinVarName($globalVar)});
+}
+
+@mixin define-css-var-comp($comp, $styleMap) {
+  @each $attr, $value in $styleMap {
+    #{joinVarName(($comp, $attr))}: #{$value}
+  }
+}
+// @mixin css-var-comp-from-global($comp, $styleMap) {
+//   @each $state, $stateStyleMap in $styleMap {
+//     @each $attr, $value in $stateStyleMap {
+//       @include css-var-from-global(($comp, $state, $attr), $value)
+//     }
+//   }
+// }

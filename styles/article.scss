@@ -1,0 +1,68 @@
+@use './mixins/bem.scss' as *;
+@use './mixins/function.scss' as *;
+
+@include b(article) {
+  max-width: 800px;
+  width:80%;
+  min-width: 400px;
+  margin: 0 auto;
+  // padding: 0 120px;
+  box-sizing: border-box;
+  line-height: 1.2;
+
+  // @media screen and (max-width: 768px) {
+  //   padding: 10px;
+  // }
+
+  code:not([data-codeblock]) {
+    background-color: getCssVar('color-primary', 'light-9');
+    color: getCssVar('color-primary');
+    padding: 0 2px;
+    border-radius: 5px;
+  }
+  
+  ul:first-child {
+    margin-top: 16px;
+  }
+
+  ul:last-child {
+    margin-bottom: 16px;
+  }
+
+  li {
+    margin-top: 8px;
+  }
+
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    background-color: #ddd;
+  }
+
+  mark {
+    background-color: getCssVar('color-mark');
+    padding: 0 2px;
+    border-radius: 2px;
+
+  }
+}
+
+pre {
+  font-size: 0.9em;
+  word-break: break-word;
+  white-space: pre-wrap;
+  padding: 1em;
+  border-radius: 1em;
+  line-height: 1.5em;
+
+  @media screen and (max-width: 768px) {
+    line-height: 1.5em;
+  }
+}
+
+
+code {
+  height: 100%;
+  font-family: JetBrains Mono;
+}

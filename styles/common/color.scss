@@ -1,0 +1,142 @@
+@use 'sass:map';
+@use 'sass:color';
+@use '../mixins/function' as *;
+
+$types: primary, success, warning, danger, error, info;
+$color-gradation: alpha, tint, light, lighter, dark, darker;
+
+$colors: (
+  'white': #ffffff,
+  'black': #000000,
+  'primary': (
+    // 'base': #f67b39,
+    // 'base': #FFAA64,
+    'base': #ffac60,
+  ),
+  'success': (
+    'base': #2eb876,
+  ),
+  'info': (
+    'base': #5897fc,
+  ),
+  'warning': (
+    'base': #fdb124,
+  ),
+  'danger': (
+    'base': #EC524B,
+  ),
+  'error': (
+    'base': #fd5747,
+  )
+);
+
+$color-white: map.get($colors, 'white');
+$color-black: map.get($colors, 'black');
+// $color-mark: #ffcf4a;
+$color-mark: #ffc78c;
+$color-transparent: transparent;
+$color-grey: map.get($colors, 'grey', 'base');
+$color-primary: map.get($colors, 'primary', 'base');
+$color-success: map.get($colors, 'success', 'base');
+$color-warning: map.get($colors, 'warning', 'base');
+$color-danger: map.get($colors, 'danger', 'base');
+$color-error: map.get($colors, 'error', 'base');
+$color-info: map.get($colors, 'info', 'base');
+
+$text-color: (
+  'primary': #333,
+  'hover': #444,
+  'regular': #666,
+  'secondary': #999,
+  'placeholder': #aaa,
+  'disabled': #acacac,
+);
+
+$border-color: (
+  'light': #e5e5e5,
+  '': #d8d8d8,
+  'dark': #cccccc,
+);
+
+$fill-color: (
+  '': #eeeeee,
+  'light': #f2f2f2,
+  'lighter': #f6f6f6,
+  'extra-light': #f6f6f6,
+  'dark': #e8e8e8,
+  'darker': #e2e2e2,
+  'blank': #fff,
+  'alpha': rgba(232, 232, 232, 0.5),
+  'alpha-dark': rgba(108, 108, 108, 0.2),
+);
+
+$mix-color-name: (
+  'light': 'pale',
+  'dark': 'deep'
+);
+
+@mixin set-mix-color(
+  $type,
+  $suffix: '',
+  $mix-color: $color-white,
+  $mix-percentage: 10%
+) {
+  $colors: map.deep-merge(
+    (
+      $type: (
+        '#{$suffix}':
+          color.mix(
+            $mix-color,
+            map.get($colors, $type, 'base'),
+            $mix-percentage
+          ),
+      ),
+    ),
+    $colors
+  ) !global;
+};
+
+@mixin set-mix-color-hsv(
+  $type,
+  $suffix: '',
+  $hue: 0deg,
+  $saturation: 0%,
+  $value: 0%
+) {
+  $base-color: map.get($colors, $type, 'base');
+  $advanced-color: adjustColorHSV($base-color, $hue, $saturation, $value);
+  $colors: map.deep-merge(
+    (
+      $type: ( '#{$suffix}': $advanced-color ),
+    ),
+    $colors
+  ) !global;
+};
+
+@mixin set-alpha-color(
+  $type,
+  $suffix: '',
+  $alpha: 1,
+) {
+  $base-color: map.get($colors, $type, 'base');
+  $advanced-color: color.adjust($color: $base-color, $alpha: $alpha);
+  $colors: map.deep-merge(
+    (
+      $type: ( '#{$suffix}': $advanced-color ),
+    ),
+    $colors
+  ) !global;
+};
+
+// 在主色调的基础上，添加深色\浅色\透明色。
+@each $type in $types {
+  @include set-alpha-color($type, 'alpha', $alpha: -0.6);
+  @each $i in (1, 3, 5, 7, 9) {
+    @include set-mix-color($type, 'light-#{$i}', $color-white, $i * 10%);
+  }
+  @include set-mix-color-hsv($type, 'dark', $hue: 2deg, $saturation: 5%);
+  // @include set-mix-color-hsv($type, 'darker', $hue: 2deg, $saturation: 20%, $value: -10%);
+  @include set-mix-color-hsv($type, 'darker', $hue: 2deg, $saturation: 20%, $value: -10%);
+  // @include set-mix-color-hsv($type, 'darker', $hue: 2deg, $saturation: 5%, $value: 5%);
+  @debug $colors;
+};

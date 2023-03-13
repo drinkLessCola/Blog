@@ -1,0 +1,60 @@
+@use '../mixins/function' as *;
+
+$component-size: (
+  'large': 38px,
+  'default': 34px,
+  'small': 30px,
+);
+
+$font-size: (
+  'extra-large': 20px,
+  'large': 18px,
+  'medium': 16px,
+  'base': 14px,
+  'small': 13px,
+  'extra-small': 12px,
+);
+$border-width: 1px;
+$border-style: solid;
+
+$border-radius: (
+  'base': 4px,
+  'circle': 100%,
+);
+
+$padding-size: 5px 10px;
+// $button-font-size: (
+//   'large': getCssVar('font-size', 'medium'),
+//   'default': getCssVar('font-size', 'base'),
+//   'small': getCssVar('font-size', 'extra-small'),
+// );
+
+// $button-icon-size: (
+//   'large': getCssVar('font-size', 'large'),
+//   'default': getCssVar('font-size', 'medium'),
+//   'small': getCssVar('font-size', 'base'),
+// );
+
+// $button-border-radius: (
+//   'large': getCssVar('border-radius', 'base'),
+//   'default': getCssVar('border-radius', 'base'),
+//   'small': getCssVar('border-radius', 'base'),
+// );
+
+// $button-padding-vertical: (
+//   'large': 10px, // 38 - 20 = 18
+//   'default': 9px, // 34 - 18 = 16
+//   'small': 8px, // 30 - 16 = 14
+// );
+
+// $button-padding-horizontal: (
+//   'large': 20px,
+//   'default': 16px,
+//   'small': 12px,
+// );
+
+// $button-icon-span-gap: (
+//   'large': 8px,
+//   'default': 6px,
+//   'small': 4px,
+// );

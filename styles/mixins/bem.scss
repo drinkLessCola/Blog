@@ -1,0 +1,43 @@
+@use 'sass:string';
+$namespace: blog;
+$element-separator: '_';
+$modifier-separator: '-';
+$state-prefix: 'is-';
+
+
+@function capitalize($str) {
+  $first: string.slice($str, 1, 1);
+  $rest: string.slice($str, 2);
+  @return string.to-upper-case($first) + $rest
+};
+
+@mixin b($block) {
+  $Block: $namespace + capitalize($block) !global;
+  .#{$Block} {
+    @content;
+  }
+}
+
+@mixin e($element) {
+  @at-root {
+    #{& + $element-separator + $element} {
+      @content;
+    }
+  }
+}
+
+@mixin m($modifier) {
+  @at-root {
+    #{& + $modifier-separator + $modifier} {
+      @content;
+    }
+  }
+}
+
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
