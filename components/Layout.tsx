@@ -1,11 +1,6 @@
-import { PropsWithChildren, useCallback, useReducer, useRef, useState } from "react";
-import Footer from "./Footer";
-import Sidebar from "./Sidebar";
-import Main from "./Main";
-import LayoutContext from "@/context/LayoutContext";
-import { useClassName } from "@/hooks/useClassName";
-import { useNamespace } from "@/hooks/useNamespace";
-import Header from "./Header";
+import type { PropsWithChildren } from 'react'
+import { useClassName } from '@/hooks/useClassName'
+import { useNamespace } from '@/hooks/useNamespace'
 
 // 组件中不能访问 Node.js 代码
 // 否则会报错- node:fs
@@ -14,18 +9,12 @@ import Header from "./Header";
 // You may need an additional plugin to handle "node:" URIs.
 // Import trace for requested module:
 
-// interface LayoutProps {
-//   title: string, 
-// }
-const reducer = (state: any, action: any) => {
-  console.log('?', state, action)
-  switch(action.type) {
-    case 'toggleSidebar': return { ...state, sidebarOpen: !state.sidebarOpen }
-  }
+interface LayoutProps {
+  layoutClass?: string
 }
 
-export default function Layout ({ children }: PropsWithChildren) {
 
+export default function Layout ({ children, layoutClass }: PropsWithChildren<LayoutProps>) {
   // const mainRef = useRef<HTMLElement>(null)
   // console.log('Layout mainRef', mainRef)
 
@@ -34,19 +23,10 @@ export default function Layout ({ children }: PropsWithChildren) {
   //   console.log(mainRef.current)
   // }, [mainRef.current])
   const ns = useNamespace('layout')
-  const [layoutState, dispatch] = useReducer(reducer, {
-    sidebarOpen: true,
-  })
-  const toggleSidebar = useCallback(() => dispatch({ type: 'toggleSidebar' }), [])
-  
+
   return (
-    <div className={useClassName(ns.b(), ns.is('wrap-sidebar', !layoutState.sidebarOpen))}>
-      <Header />
-      <LayoutContext.Provider value={{ layoutState, toggleSidebar }}>
-        <Sidebar />
-        <Main>{children}</Main>
-      </LayoutContext.Provider>
-      <Footer />
+    <div className={useClassName(ns.b(), layoutClass ?? '')}>
+      {children}
     </div>
   )
 }

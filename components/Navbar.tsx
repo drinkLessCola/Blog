@@ -1,36 +1,27 @@
-import Link from "next/link"
-import { useRouter } from "next/router"
-import Menu from "./Menu"
-import { IMenuItem } from "@/types/article"
-import { useNamespace } from "@/hooks/useNamespace"
-import SvgIcon from "./SvgIcon"
+// import { useRouter } from 'next/router'
+import Menu from './Menu'
+import type { IMenuItem } from './Menu'
+import { useNamespace } from '@/hooks/useNamespace'
 import Home from '@/public/icons/home.svg'
 import Info from '@/public/icons/info.svg'
 
 const menu = [
-  { 
-    title: (
-      <>
-        <SvgIcon><Home/></SvgIcon>
-        Home
-      </>
-    ), 
-    path: "/" 
+  {
+    prefix: <Home/>,
+    label: 'Home',
+    path: '/'
   },
-  { 
-    title: (
-      <>
-        <SvgIcon><Info/></SvgIcon>
-        About
-      </>
-    ), 
-    path: "/about"
-  },
+  {
+    prefix: <Info/>,
+    label: 'About',
+    path: '/about'
+  }
 ] as unknown as IMenuItem[]
 
-export default function Navbar() {
-  const router = useRouter()
-  const currentPage = router.pathname
+export default function Navbar () {
+  // TODO
+  // const router = useRouter()
+  // const currentPage = router.pathname
   // console.log(router)
   const ns = useNamespace('navbar')
   return (
