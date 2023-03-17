@@ -1,29 +1,29 @@
-import { capitalize } from "@/utils/string"
+import { capitalize } from '@/utils/string'
 const namespace = 'blog'
 const statePrefix = 'is-'
 
 const _bem = (
   namespace: string,
-  block: string, 
+  block: string,
   blockSuffix: string,
-  element: string, 
+  element: string,
   modifier: string
 ) => {
-    let className = `${namespace}${capitalize(block)}`
-    if(blockSuffix) className += capitalize(blockSuffix)
-    if(element) className += `_${element}`
-    if(modifier) className += `-${modifier}`
+  let className = `${namespace}${capitalize(block)}`
+  if (blockSuffix) className += capitalize(blockSuffix)
+  if (element) className += `_${element}`
+  if (modifier) className += `-${modifier}`
 
-    return className
+  return className
 }
 
 export const useNamespace = (block: string) => {
-  
+
 
   const b = (blockSuffix = '') => _bem(namespace, block, blockSuffix, '', '')
   const e = (element?: string) => element ? _bem(namespace, block, '', element, '') : ''
   const m = (modifier?: string) => modifier ? _bem(namespace, block, '', '', modifier) : ''
-  const be = (blockSuffix?: string, element?: string) => 
+  const be = (blockSuffix?: string, element?: string) =>
     blockSuffix && element
       ? _bem(namespace, block, blockSuffix, element, '')
       : ''
@@ -40,9 +40,7 @@ export const useNamespace = (block: string) => {
       ? _bem(namespace, block, blockSuffix, element, modifier)
       : ''
 
-  const is = (name: string, state: boolean = true) => {
-    return name && state ? `${statePrefix}${name}` : ''
-  }
+  const is = (name: string, state: boolean = true) => name && state ? `${statePrefix}${name}` : ''
 
   return {
     namespace,

@@ -1,6 +1,6 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 
-interface IScrollbarContext{
+interface IScrollbarContext {
   updateScroll: (isVertical: boolean, offset: number) => void
   size: number
 }

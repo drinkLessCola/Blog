@@ -1,11 +1,5 @@
-export const isNumber = (val: any): val is number => {
-  return typeof(val) === 'number'
-}
+export const isNumber = (val: any): val is number => typeof (val) === 'number'
 
-export const isString = (val: any): val is String => {
-  return typeof(val) === 'string'
-}
+export const isString = (val: any): val is string => typeof (val) === 'string'
 
-export const isStringNumber = (val: any): boolean => {
-  return isString(val) && !Number.isNaN(Number(val))
-}
+export const isStringNumber = (val: any): boolean => isString(val) && !Number.isNaN(Number(val))

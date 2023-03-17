@@ -1,7 +1,7 @@
-interface TocProps {
-  
-}
+// interface TocProps {
 
-export default function Toc({}: TocProps) {
+// }
 
+export default function Toc () {
+  return (<></>)
 }

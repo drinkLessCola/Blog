@@ -1,6 +1,6 @@
-import { useNamespace } from "@/hooks/useNamespace"
+import { useNamespace } from '@/hooks/useNamespace'
 
-export default function Footer() {
+export default function Footer () {
   const ns = useNamespace('footer')
   return (
     <footer className={ns.b()}>

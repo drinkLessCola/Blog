@@ -1,9 +1,9 @@
-import Layout from "@/components/Layout";
-import Head from "next/head";
+import Layout from '@/components/Layout'
+import Head from 'next/head'
 
-export default function About() {
+export default function About () {
   return (
-    <Layout title="ohho">
+    <Layout>
       <Head>
         <title>About</title>
       </Head>

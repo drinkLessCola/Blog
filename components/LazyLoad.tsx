@@ -1,18 +1,19 @@
-import useThrottle from "@/hooks/useThrottle";
-import { PropsWithChildren, RefObject, useCallback, useEffect, useState } from "react";
+import useThrottle from '@/hooks/useThrottle'
+import { useCallback, useEffect, useState } from 'react'
+import type { PropsWithChildren, RefObject } from 'react'
 
 interface LazyLoadProps {
   // 解包的 dom 不是最新的
   container: RefObject<HTMLElement> | null
 }
 
-export default function LazyLoad({ children, container }: PropsWithChildren<LazyLoadProps>) {
+export default function LazyLoad ({ children, container }: PropsWithChildren<LazyLoadProps>) {
   // const [containerCoord, updateContainerCoord] = useState({ top: 0, bottom: 0 })
   const [containerDOM, updateContainerDOM] = useState<HTMLElement>()
   const [imageLoadedFinish, updateImageLoadedFinish] = useState(false)
 
   const loadImage = useCallback((imgDom: HTMLImageElement) => {
-    if(!imgDom.dataset.src) return
+    if (!imgDom.dataset.src) return
     const src = imgDom.dataset.src
     imgDom.src = src
     imgDom.removeAttribute('data-src')
@@ -27,13 +28,13 @@ export default function LazyLoad({ children, container }: PropsWithChildren<Lazy
   }, [])
 
   const handlePageScroll = useThrottle((event?: Event) => {
-    if(!containerDOM) return
+    if (!containerDOM) return
     console.log('scroll~~~~~~~~~~~~~')
     console.log(containerDOM)
     const rootCoord = containerDOM.getBoundingClientRect()
     const targetImage = containerDOM.querySelectorAll('img[data-src]')
 
-    if(!targetImage.length) {
+    if (!targetImage.length) {
       updateImageLoadedFinish(true)
       return
     }
@@ -41,9 +42,9 @@ export default function LazyLoad({ children, container }: PropsWithChildren<Lazy
     targetImage.forEach((img) => {
       const imgCoord = img.getBoundingClientRect()
       console.log(img)
-      if(checkImageVisible(imgCoord, rootCoord)) {
+      if (checkImageVisible(imgCoord, rootCoord))
         loadImage(img as HTMLImageElement)
-      }
+
     })
   }, 200)
 
@@ -73,7 +74,7 @@ export default function LazyLoad({ children, container }: PropsWithChildren<Lazy
   // }, [container])
 
   useEffect(() => {
-    if(typeof window !== 'undefined'/* && !IntersectionObserver*/) {
+    if (typeof window !== 'undefined'/* && !IntersectionObserver*/) {
       updateImageLoadedFinish(false)
       const containerDOM = container?.current ?? document.documentElement
       updateContainerDOM(containerDOM)
@@ -83,13 +84,13 @@ export default function LazyLoad({ children, container }: PropsWithChildren<Lazy
 
   useEffect(() => {
     // if(!IntersectionObserver) {
-      console.log('scrollTop change!')
-      if(imageLoadedFinish) return
-      
-      handlePageScroll()
+    console.log('scrollTop change!')
+    if (imageLoadedFinish) return
+
+    handlePageScroll()
     // }
   }, [containerDOM?.scrollTop])
 
 
-  return <>{ children }</>
+  return <>{children}</>
 }

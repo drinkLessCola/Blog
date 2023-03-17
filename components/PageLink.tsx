@@ -1,12 +1,12 @@
-import Link from "next/link"
+import Link from 'next/link'
 
 interface PageLinkProp {
-  title: string,
-  articleDir: string,
-  id: string,
+  title: string
+  articleDir: string
+  id: string
 }
 
-export default function PageLink({ title, articleDir, id }: PageLinkProp) {
+export default function PageLink ({ title, articleDir, id }: PageLinkProp) {
   const link = `/${articleDir}/${id}`
 
   return (

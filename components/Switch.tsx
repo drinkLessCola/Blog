@@ -1,10 +1,10 @@
-import LayoutContext from "@/context/LayoutContext"
-import { useContext } from "react"
-import SvgIcon from "./SvgIcon"
-import Menu from "@/public/icons/menu.svg"
-import { useNamespace } from "@/hooks/useNamespace"
+import LayoutContext from '@/context/LayoutContext'
+import { useContext } from 'react'
+import SvgIcon from './SvgIcon'
+import Menu from '@/public/icons/menu.svg'
+import { useNamespace } from '@/hooks/useNamespace'
 
-export default function Switch() {
+export default function Switch () {
   const { toggleSidebar } = useContext(LayoutContext)
   const ns = useNamespace('switch')
   return (
@@ -13,6 +13,6 @@ export default function Switch() {
         <SvgIcon><Menu /></SvgIcon>
       </button>
     </div>
-    
+
   )
 }

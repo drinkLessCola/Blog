@@ -1,13 +1,13 @@
 import { useClassName } from '@/hooks/useClassName'
 import Menu from './Menu'
 import { useNamespace } from '@/hooks/useNamespace'
-import { MenuContext } from "@/context/MenuContext"
-import { HorizontalContext } from "@/context/HorizontalContext"
-import Scrollbar from "./Scrollbar"
-import { useContext } from "react"
-import LayoutContext from "@/context/LayoutContext"
+import { MenuContext } from '@/context/MenuContext'
+import { HorizontalContext } from '@/context/HorizontalContext'
+import Scrollbar from './Scrollbar'
+import { useContext } from 'react'
+import LayoutContext from '@/context/LayoutContext'
 
-export default function Sidebar() {
+export default function Sidebar () {
   const ns = useNamespace('sidebar')
   const { menu } = useContext(MenuContext)
   const { layoutState: { sidebarOpen } } = useContext(LayoutContext)

@@ -1,7 +1,6 @@
-import { useClassName } from "@/hooks/useClassName";
-import { useNamespace } from "@/hooks/useNamespace";
-import { capitalize } from "@/utils/string";
-import { PropsWithChildren } from "react";
+import { useClassName } from '@/hooks/useClassName'
+import { useNamespace } from '@/hooks/useNamespace'
+import { type PropsWithChildren } from 'react'
 
 // const importAll = (requireContext: __WebpackModuleApi.RequireContext) => {
 //   return requireContext.keys().forEach(requireContext)
@@ -18,13 +17,13 @@ interface ISvgIconProp {
   rotate?: boolean
 }
 
-export default function SvgIcon({ children, rotate = false, size = '1em' }: PropsWithChildren<ISvgIconProp>) {
+export default function SvgIcon ({ children, rotate = false, size = '1em' }: PropsWithChildren<ISvgIconProp>) {
   // const iconName = capitalize(icon)
 
   const ns = useNamespace('icon')
   return (
     <i className={useClassName(ns.b(), ns.is('rotate', rotate))} style={{ width: size, height: size }}>
-      { children }
+      {children}
     </i>
   )
 }

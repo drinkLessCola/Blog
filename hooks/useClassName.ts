@@ -1,3 +1,1 @@
-export const useClassName = (...classList: string[]) => {
-  return classList.join(' ')
-}
+export const useClassName = (...classList: string[]) => classList.join(' ')

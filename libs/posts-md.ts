@@ -1,6 +1,3 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs"
-import { dirname, resolve, basename, extname, sep, parse } from "node:path"
-import { fileURLToPath } from "node:url"
 import hljs from 'highlight.js'
 
 import bash from 'highlight.js/lib/languages/bash'
@@ -32,7 +29,7 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
   highlight: (str: string, lang: string) => {
-    if(lang && hljs.getLanguage(lang)) {
+    if (lang && hljs.getLanguage(lang)) {
       try {
         const code = hljs.highlight(str, {
           language: lang,
@@ -40,16 +37,16 @@ const md = new MarkdownIt({
         }).value
 
         return `<pre class="hljs"><code data-codeblock>${code}</code></pre>`
-      } catch (err) { 
-        console.log(err) 
+      } catch (err) {
+        console.log(err)
       }
 
-      const code = md.utils.escapeHtml(str)
+      const code: string = md.utils.escapeHtml(str)
       return `<pre class="hljs"><code  data-codeblock>${code}</code></pre>`
     }
   }
 }).use(require('markdown-it-mark'))
-export function parseMarkdownFile(file: string) {
+export function parseMarkdownFile (file: string) {
   // file = file.replaceAll(/(\*\*.*==.*==.*\*\*)([^\s])/g, '$1 $2')
   file = file.replaceAll(/\*\*\s+(.*)\*\*/g, '**$1**')
   file = file.replaceAll(/\*\*(.*)\s+\*\*/g, '**$1**')

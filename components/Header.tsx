@@ -1,9 +1,9 @@
-import Link from "next/link"
-import Navbar from "./Navbar"
+import Link from 'next/link'
+import Navbar from './Navbar'
 import DrinkLessCola from '@/public/icons/DrinkLessCola.svg'
-import { useNamespace } from "@/hooks/useNamespace"
+import { useNamespace } from '@/hooks/useNamespace'
 
-export default function Header() {
+export default function Header () {
   const ns = useNamespace('header')
   return (
     <header className={ns.b()}>

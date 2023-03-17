@@ -1,11 +1,12 @@
-import { IArticleInfo, IMenuItem } from "@/types/article";
-import createAxiosInstance, { APISchema, CreateRequestClient, CreateRequestConfig } from "."
+import { type IArticleInfo, type IArticleMenuItem } from '@/types/article'
+import createAxiosInstance, { type APISchema } from '.'
+import { BASE_URL } from '@/config'
 
 interface ArticleSchema extends APISchema {
   getArticle: {
     request: {
       articleId: string
-    };
+    }
     response: {
       articleId: string
       title: string
@@ -14,7 +15,7 @@ interface ArticleSchema extends APISchema {
   }
 
   getArticleSlug: {
-    request: void
+    request: never
     response: Array<{
       slug: string[]
       articleId: string
@@ -22,27 +23,27 @@ interface ArticleSchema extends APISchema {
   }
 
   getArticleMenu: {
-    request: void
-    response: Array<IMenuItem>
+    request: never
+    response: IArticleMenuItem[]
   }
 
   getArticleByPath: {
     request: {
       path: string
-    },
+    }
     response: {
-      articleId: string,
-      title: string,
+      articleId: string
+      title: string
       lastModified: Date
     } & (
-      { isMenu: true, detail: IArticleInfo[] } 
+      { isMenu: true, detail: IArticleInfo[] }
       | { isMenu: false, detail: string }
     )
   }
 }
 
 export const articleAPI = createAxiosInstance<ArticleSchema>({
-  baseURL: 'http://localhost:3000/article',
+  baseURL: `${BASE_URL}/article`,
   headers: {
 
   },
@@ -59,9 +60,9 @@ export const articleAPI = createAxiosInstance<ArticleSchema>({
     //   return Promise.resolve(res)
     // }
   },
-  errorHandler: (error) => {
-    return Promise.reject('服务器异常，请联系管理员！')
-  },
+  errorHandler: async (error) => {
+    await Promise.reject(new Error(`${error.message}:服务器异常，请联系管理员！`))
+  }
 })
 
 export const articleProxyAPI = createAxiosInstance<Pick<ArticleSchema, 'getArticleMenu'>>({
@@ -70,13 +71,13 @@ export const articleProxyAPI = createAxiosInstance<Pick<ArticleSchema, 'getArtic
 
   },
   apis: {
-    getArticleMenu: 'GET /menu',
+    getArticleMenu: 'GET /menu'
     // getCache: () => {
     //   const res = JSON.parse(window.localStorage.getItem('cache') || 'null')
     //   return Promise.resolve(res)
     // }
   },
-  errorHandler: (error) => {
-    return Promise.reject('服务器异常，请联系管理员！')
-  },
+  errorHandler: async (error) => {
+    await Promise.reject(new Error(`${error.message}:服务器异常，请联系管理员！`))
+  }
 })
