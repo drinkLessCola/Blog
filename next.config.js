@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: true,
+  // distDir: 'build',
+  // assetPrefix: './',
   webpack (config) {
     config.module.rules.push(
       {
@@ -63,7 +66,7 @@ const nextConfig = {
     console.log('rewrites')
     return {
       fallback: [
-        { source: '/api/article/:path*', destination: 'http://localhost:3000/article/:path*' }
+        { source: '/api/article/:path*', destination: 'https://summerblink.site/blog/article/:path*' }
       ]
     }
   }

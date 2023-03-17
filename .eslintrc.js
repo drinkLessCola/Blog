@@ -12,7 +12,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
+    project: ['tsconfig.json']
   },
   plugins: [
     'react'
@@ -40,7 +41,7 @@ module.exports = {
     'no-extra-parens': 0,
 
     // 强制所有控制语句使用一致的括号风格
-    'curly': [2, 'all'],
+    'curly': [2, 'multi'],
     // 禁止 catch 子句的参数与外层作用域中的变量同名
     'no-catch-shadow': 0,
     // 不允许标签与变量同名
@@ -88,9 +89,6 @@ module.exports = {
     'func-names': 0,
     // 文件末尾强制换行
     'eol-last': 2,
-    'indent': [
-      'error', 2
-    ],
     // 要求或禁止在函数标识符和其调用之间有空格
     'func-call-spacing': 2,
     // 强制在对象字面量的属性中键和值之间使用一致的间距
@@ -254,7 +252,7 @@ module.exports = {
     // 禁止类成员中出现重复的名称
     'no-dupe-class-members': 2,
     // 每个模块只能使用一个import
-    'no-duplicate-imports': 2,
+    'no-duplicate-imports': 0,
     // 禁止 Symbolnew 操作符和 new 一起使用
     'no-new-symbol': 2,
     // 允许指定模块加载时的进口
@@ -326,8 +324,6 @@ module.exports = {
     'react/prefer-es6-class': 2,
     // 防止在React组件定义中丢失props验证
     // "react/prop-types": 1,
-    // 使用JSX时防止丢失React
-    'react/react-in-jsx-scope': 2,
     // 防止没有children的组件的额外结束标签
     'react/self-closing-comp': 0,
     // 禁止不必要的bool转换
@@ -339,9 +335,15 @@ module.exports = {
     // 在JSX属性中强制或禁止等号周围的空格
     'react/jsx-equals-spacing': 2,
     'react/jsx-filename-extension': [2, {
-      'extensions': ['.js', '.jsx']
+      'extensions': ['.js', '.jsx', '.tsx']
     }],
+    'react/react-in-jsx-scope': 'off',
     // 禁止未使用的变量
-    'no-unused-vars': 0
+    'no-unused-vars': 0,
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    'react/prop-types': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
   }
 }

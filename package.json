@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "(if exist build rd /s /q build 2>nul) && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "tsx libs/posts-md.ts"
