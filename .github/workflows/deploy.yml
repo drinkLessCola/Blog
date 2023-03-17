@@ -9,7 +9,7 @@ on:
       - 'src/**'
 jobs:
   test:
-    runs-on: centOS-7.6
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v2
