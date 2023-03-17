@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: DrinkLessCola/blog:latest
+          tags: drinklesscola/blog:latest
       
       - name: Pull on Server
         uses: appleboy/ssh-action@master
