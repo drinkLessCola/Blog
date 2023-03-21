@@ -94,7 +94,7 @@ function attachAPI<T extends APISchema> (
       const [prefix, method] = apiPath.match(METHOD_PATTERN) ?? ['GET', 'GET']
       let url = apiPath.replace(prefix, '')
       const matchParams = url.match(PATH_PARAMS_PATTERN)
-      if (matchParams)
+      if (matchParams) {
         matchParams.forEach((match) => {
           const key = match.replace(':', '')
           if (Reflect.has(_params, key)) {
@@ -102,6 +102,7 @@ function attachAPI<T extends APISchema> (
             Reflect.deleteProperty(_params, key)
           }
         })
+      }
 
       const requestParams = METHODS_USE_DATA.includes(method)
         ? { data: _params }
@@ -122,6 +123,7 @@ function attachAPI<T extends APISchema> (
 export function createAxiosInstance<T extends APISchema> (requestConfig: CreateRequestConfig<T>): CreateRequestClient<T> {
   const { baseURL, headers, apis, headerHandlers: _headerHandlers, errorHandler } = requestConfig
 
+  console.log('baseURL', baseURL)
   const axiosInstance = axios.create({
     baseURL,
     headers
@@ -145,7 +147,6 @@ export function createAxiosInstance<T extends APISchema> (requestConfig: CreateR
       const { data } = res.data
 
       // TODO message
-      // console.log(code, msg, data)
       return data
     },
     (error: AxiosError) => {
