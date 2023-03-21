@@ -1,6 +1,4 @@
 import type { PropsWithChildren } from 'react'
-import { useClassName } from '@/hooks/useClassName'
-import { useNamespace } from '@/hooks/useNamespace'
 
 // 组件中不能访问 Node.js 代码
 // 否则会报错- node:fs
@@ -10,11 +8,11 @@ import { useNamespace } from '@/hooks/useNamespace'
 // Import trace for requested module:
 
 interface LayoutProps {
-  layoutClass?: string
+  className?: string
 }
 
 
-export default function Layout ({ children, layoutClass }: PropsWithChildren<LayoutProps>) {
+export default function Layout ({ children, className }: PropsWithChildren<LayoutProps>) {
   // const mainRef = useRef<HTMLElement>(null)
   // console.log('Layout mainRef', mainRef)
 
@@ -22,10 +20,9 @@ export default function Layout ({ children, layoutClass }: PropsWithChildren<Lay
   //   console.log('useEffect mainRef', mainRef)
   //   console.log(mainRef.current)
   // }, [mainRef.current])
-  const ns = useNamespace('layout')
 
   return (
-    <div className={useClassName(ns.b(), layoutClass ?? '')}>
+    <div className={className ?? ''}>
       {children}
     </div>
   )

@@ -1,21 +1,13 @@
-import { type PropsWithChildren, useContext } from 'react'
-import Scrollbar from './Scrollbar'
-import { useClassName } from '@/hooks/useClassName'
-import { useNamespace } from '@/hooks/useNamespace'
-import { ArticleContext } from '@/context/ArticleContext'
-import MenuSwitch from './Switch'
+import { type PropsWithChildren } from 'react'
 
-export default function Main ({ children }: PropsWithChildren) {
-  const ns = useNamespace('main')
-  const { currentLink: link } = useContext(ArticleContext)
-  const recordKey = `@scroll|${link}`
+interface IMainProps {
+  className?: string
+}
 
+export default function Main ({ children, className }: PropsWithChildren<IMainProps>) {
   return (
-    <main className={useClassName(ns.b())}>
-      <Scrollbar fitParent recordKey={recordKey}>
-        {children}
-      </Scrollbar>
-      <MenuSwitch></MenuSwitch>
+    <main className={className ?? ''}>
+      {children}
     </main>
   )
 }
