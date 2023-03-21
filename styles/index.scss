@@ -1,6 +1,6 @@
 @use './global.scss';
 
-@use './layout.scss';
+@use './layout-article.scss';
 @use './layout-home.scss';
 
 @use './header.scss';
@@ -12,8 +12,8 @@
 @use './menu.scss';
 @use './scrollbar.scss';
 @use './article.scss';
-
-
+@use './article-card.scss';
+@use './pagination.scss';
 // :root {
 //   --text-color: #333333;
 //   --bg-color: #ffffff;

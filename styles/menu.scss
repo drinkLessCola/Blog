@@ -6,7 +6,8 @@
   flex-direction: column;
   transition: transform 0.1s linear, height 0.08s linear;
   transform-origin: top;
-  height: 100%;
+  // TODO
+  width: 100%;
   list-style: none;
   
   @include when(horizontal) {
@@ -26,7 +27,6 @@
   color: getCssVar('text-color', 'regular');
   // background-color: getCssVar('fill-color', 'blank');
   border-radius: getCssVar('border-radius', 'base');
-  width: 100%;
   padding: 8px 20px;
   margin: 1px 0;
   box-sizing: border-box;
@@ -45,7 +45,7 @@
   a {
     display: flex;
     align-items: center;
-    flex: 1;
+    flex: 1 1 auto;
   }
 
   @include e(prefix) {
