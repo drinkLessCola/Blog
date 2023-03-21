@@ -1,5 +1,5 @@
-import React from 'react'
+import { createContext } from 'react'
 
-export const ArticleContext = React.createContext({
+export const ArticleContext = createContext({
   currentLink: ''
 })

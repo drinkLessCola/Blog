@@ -20,11 +20,10 @@ interface MenuProps {
   isHorizontal?: boolean
   isWrap?: boolean
 }
-export default function Menu ({ menu, level = 1, isWrap = false, isHorizontal: horizontal }: MenuProps) {
+export default function Menu ({ menu, level = 1, isWrap = false, isHorizontal: horizontal = false }: MenuProps) {
   const ns = useNamespace('menu')
   const isHorizontal = horizontal ?? useContext(HorizontalContext)
 
-  console.log(!!menu)
   if (!menu) return <></>
   return (
     <ul
@@ -82,12 +81,21 @@ export function MenuItem ({
         className={useClassName(ns.b(), ns.is('active', currentLink === link))}
         style={{ paddingLeft: level * padding }}
       >
-        <Link href={link} >
-          <span className={ns.e('prefix')}>
-            <SvgIcon>{prefix}</SvgIcon>
-          </span>
-          <span className={ns.e('label')}>{label}</span>
-        </Link>
+        {
+          link
+            ? (<Link href={link}>
+                <span className={ns.e('prefix')}>
+                  <SvgIcon>{prefix}</SvgIcon>
+                </span>
+                <span className={ns.e('label')}>{label}</span>
+              </Link>)
+            : (<>
+                <span className={ns.e('prefix')}>
+                  <SvgIcon>{prefix}</SvgIcon>
+                </span>
+                <span className={ns.e('label')}>{label}</span>
+              </>)
+        }
         <span className={ns.e('suffix')} onClick={toggle}>
           {isMenu && <SvgIcon rotate={childHidden}><ArrowDown/></SvgIcon>}
         </span>
