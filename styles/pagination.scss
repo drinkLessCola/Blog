@@ -1,0 +1,28 @@
+@use './mixins/bem' as *;
+@use './mixins/function' as *;
+
+@include b(pagination) {
+  display: flex;
+  align-items: center;
+  list-style: none;
+
+
+  @include e(item) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: getCssVar('fill-color', 'alpha-dark');
+    }
+    @include when(active) {
+      background-color: getCssVar('text-color', 'primary');
+      color: getCssVar('fill-color');
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@use './mixins/function' as *;
+@use './mixins/bem' as *;
+@include b(articleCard) {
+  // background: getCssVar('fill-color');
+  // box-shadow: 0 0 12px 0 getCssVar('fill-color', 'alpha-dark');
+  padding: 15px 40px;
+  
+  // border-radius: 5px;
+  font-family: Gilroy;
+
+  @include e(title) {
+    margin: 10px 5px;
+    font-size: 22px;
+    color: getCssVar('text-color', 'primary');
+  }
+
+  @include e(date) {
+    display: inline-block;
+    position: relative;
+    font-size: 30px;
+    :first-child {
+      display: inline-block;
+      transform: translate(-5px, -10px);
+    }
+    :last-child {
+      display: inline-block;
+      transform: translate(5px, 10px);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(30deg);
+      height: 40px;
+      width: 1px;
+      background-color: black;
+
+    }
+  }
+
+  @include e(description) {
+    font-size: 16px;
+    margin: 10px 0;
+    color: getCssVar('text-color', 'hover');
+  }
+}
+
+@include b(articleCardTag) {
+  display: flex;
+  align-items: center;
+
+  @include e(list) {
+    display: flex;
+    list-style: none;
+    margin-left: 5px;
+  }
+
+  @include e(item) {
+    font-size: 14px;
+    color: getCssVar('text-color', 'hover');
+    background-color: getCssVar('fill-color', 'alpha-dark');
+    padding: 2px 5px;
+    border-radius: 5px;
+    margin: 0 2px;
+  }
+}
