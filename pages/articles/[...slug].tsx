@@ -8,7 +8,6 @@ import { articleAPI } from '../api/article'
 import { parseMarkdownFile } from '@/libs/posts-md'
 import { getLinkFromSlug } from '@/utils/slug'
 import Article from '@/components/Article'
-import { ArticleContext } from '@/context/ArticleContext'
 import { type NextPageWithLayout } from '../_app'
 import ArticlePageLayout from '../../layout/ArticlePageLayout'
 import { formatDate } from '@/utils/date'
@@ -46,23 +45,16 @@ export const getServerSideProps: GetServerSideProps<ArticlePageProps> = async ({
     const data = await articleAPI.getArticleByPath({
       path
     })
-    console.log('data', data)
 
     const { isMenu, title = '', detail, lastModified } = data
 
-    console.log('getStaticProps return')
-    console.log('path', path)
-
     return {
       props: {
-        articleData: {
-          html: isMenu
-            ? genMenuHTML(detail)
-            : parseMarkdownFile(detail),
-          title,
-          lastModified
-        },
-        link: path
+        html: isMenu
+          ? genMenuHTML(detail)
+          : parseMarkdownFile(detail),
+        title,
+        lastModified
       }
     }
   } catch (err) {
@@ -72,33 +64,27 @@ export const getServerSideProps: GetServerSideProps<ArticlePageProps> = async ({
   }
 }
 
-interface ArticlePageData {
+interface ArticlePageProps {
   title: string
   html: string
   lastModified: Date
 }
 
-interface ArticlePageProps {
-  articleData: ArticlePageData
-  link: string
-}
-
-const ArticlePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ articleData, link }) => {
-  console.log('ArticlePage', articleData, link)
-  const { title, html: articleHtml, lastModified } = articleData
+const ArticlePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ title, html: articleHtml, lastModified }) => {
+  console.log('ArticlePage render')
   const html = `
     <h1>${title}</h1>
     <p>更新日期：<time>${formatDate(lastModified)}</time></p>
     ${articleHtml}
   `
   return (
-    <ArticleContext.Provider value={{ currentLink: link }}>
+    <>
       {/* 正文部分 */}
       <Head>
         <title>{title}</title>
       </Head>
       <Article html={html}></Article>
-    </ArticleContext.Provider>
+    </>
   )
 }
 
