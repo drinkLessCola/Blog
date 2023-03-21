@@ -44,9 +44,6 @@ interface ArticleSchema extends APISchema {
 
 export const articleAPI = createAxiosInstance<ArticleSchema>({
   baseURL: `${BASE_URL}/article`,
-  headers: {
-
-  },
   apis: {
     getArticleMenu: 'GET /menu',
     getArticle: {
@@ -66,10 +63,8 @@ export const articleAPI = createAxiosInstance<ArticleSchema>({
 })
 
 export const articleProxyAPI = createAxiosInstance<Pick<ArticleSchema, 'getArticleMenu'>>({
-  baseURL: '/api/article',
-  headers: {
-
-  },
+  baseURL: 'http://localhost:3000/api/article',
+  // baseURL: `${BASE_URL}/article`,
   apis: {
     getArticleMenu: 'GET /menu'
     // getCache: () => {
@@ -78,6 +73,7 @@ export const articleProxyAPI = createAxiosInstance<Pick<ArticleSchema, 'getArtic
     // }
   },
   errorHandler: async (error) => {
+    console.log('error')
     await Promise.reject(new Error(`${error.message}:服务器异常，请联系管理员！`))
   }
 })
