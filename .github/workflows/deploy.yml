@@ -6,7 +6,7 @@ on:
     # 修改侦听的文件范围
     paths:
       - '.github/workflows/**'
-      - '*/**'
+      - '*'
 jobs:
   test:
     runs-on: ubuntu-latest
