@@ -1,11 +1,12 @@
-import { ScrollbarContext } from '@/context/ScrollbarContext'
+import { ArticleContext } from '@/context/ArticleContext'
+import { ScrollHandlerContext } from '@/context/ScrollHandlerContext'
+import { ScrollToContext, ScrollbarContext } from '@/context/ScrollbarContext'
 import { useClassName } from '@/hooks/useClassName'
 import { useNamespace } from '@/hooks/useNamespace'
+import useThrottle from '@/hooks/useThrottle'
 import { addUnit } from '@/utils/style'
 import { isNumber } from '@/utils/type'
-import React, { type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import LazyLoad from './LazyLoad'
-
+import React, { type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState, useLayoutEffect } from 'react'
 
 export interface IScrollbarProps {
   thumbSize?: number
@@ -14,7 +15,7 @@ export interface IScrollbarProps {
   width?: number | string
   height?: number | string
   alwaysVisible?: boolean
-  recordKey?: string
+  fullPage?: boolean
 }
 export default function Scrollbar ({
   children,
@@ -23,32 +24,39 @@ export default function Scrollbar ({
   maxHeight,
   width,
   height,
-  alwaysVisible = false,
-  recordKey
+  alwaysVisible = false
 }: PropsWithChildren<IScrollbarProps>) {
   const ns = useNamespace('scrollbar')
 
-  const [scrollX, updateScrollX] = useState(0) // 水平滚动条的偏移量
-  const [scrollY, updateScrollY] = useState(0) // 垂直滚动条的偏移量
-  const [lock, updateLock] = useState(false)
+  const [scrollX, setScrollX] = useState(0) // 水平滚动条的偏移量
+  const [scrollY, setScrollY] = useState(0) // 垂直滚动条的偏移量
+  const [scrollLeft, setScrollLeft] = useState(0)
+  const [scrollTop, setScrollTop] = useState(0)
+  const isScrolling = useRef(false)
+  const lock = useRef(false) // 是否响应滚动事件
+  const lastScrollTop = useRef(0)
+  const requireScrollingAnimate = useRef(false)
 
-  const [horizontalThumbWidth, updateHorizontalThumbWidth] = useState(0)
-  const [verticalThumbHeight, updateVerticalThumbHeight] = useState(0)
+  const [horizontalThumbWidth, setHorizontalThumbWidth] = useState(0)
+  const [verticalThumbHeight, setVerticalThumbHeight] = useState(0)
 
-  let [thumbVisible, updateThumbVisible] = useState(false) // 鼠标是否移入实例，用于控制滚动条的显隐
-  let [wrapperCoord, updateWrapperCoord] = useState({
+  let [thumbVisible, setThumbVisible] = useState(false) // 鼠标是否移入实例，用于控制滚动条的显隐
+  let [wrapCoord, setWrapCoord] = useState({
     height: 0,
     width: 0,
     top: 0,
     left: 0
   })
 
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const viewRef = useRef<HTMLDivElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null!)
+  const viewRef = useRef<HTMLDivElement>(null!)
+
+  const { currentLink: recordKey } = useContext(ArticleContext)
 
   const scrollbarStyle = useMemo(() => ({
     '--ice-thumb-size': `${thumbSize}px`,
-    height: fitParent ? '100%' : undefined
+    height: fitParent ? '100%' : undefined,
+    width: fitParent ? '100%' : undefined
   }), [thumbSize, fitParent])
 
   const wrapStyle = useMemo(() => ({
@@ -57,106 +65,218 @@ export default function Scrollbar ({
     height: height ? addUnit(height) : undefined
   }), [maxHeight, width, height])
 
-  const showScrollbar = useCallback(() => {updateThumbVisible(true)}, [])
-  const hideScrollbar = useCallback(() => {updateThumbVisible(false)}, [])
+  const showScrollbar = useCallback(() => {setThumbVisible(true)}, [])
+  const hideScrollbar = useCallback(() => {setThumbVisible(false)}, [])
+
+  const handlers = useContext(ScrollHandlerContext)
+
+  const wrapDom = wrapRef.current
+  const viewDom = viewRef.current
 
   /**
    * 处理鼠标滚动事件
    * scroll 事件只有在 overflow: scroll | auto 的状态下才能产生
    * @param event
    */
-  const handleScroll = () => {
-    const wrapDom = wrapRef.current
-    if (!wrapDom) return
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    if (!wrapDom || isScrolling.current) return
+    const curScrollTop = wrapDom.scrollTop
+    setScrollLeft(wrapDom.scrollLeft)
 
-    updateScrollX(wrapDom.scrollLeft / wrapDom.scrollWidth * (wrapperCoord.width - thumbSize))
-    updateScrollY(wrapDom.scrollTop / wrapDom.scrollHeight * (wrapperCoord.height - thumbSize))
+    setScrollTop(curScrollTop)
+    lastScrollTop.current = scrollTop
   }
 
-  const handleRecord = (scrollTop: number) => {
+  /**
+   * 记录滚动位置
+   * @param scrollTop 滚动位置
+   */
+  const handleRecord = (scrollTop: number): void => {
     if (!recordKey) return
-    window.sessionStorage.setItem(recordKey, `${scrollTop}`)
+    window.sessionStorage.setItem(`@scroll|${recordKey}`, `${scrollTop}`)
   }
 
+  /**
+   * 从 sessionStorage 中获取上次滚动的位置
+   * 无需记录，返回 undefined
+   * 没有记录，返回 0
+   */
   const getRecord = useCallback(() => {
     if (!recordKey) return
-    const record = Number(window.sessionStorage.getItem(recordKey))
+    const record = Number(window.sessionStorage.getItem(`@scroll|${recordKey}`))
     return Number.isNaN(record) ? 0 : record
   }, [recordKey])
 
-  const updateScroll = useCallback((isVertical: boolean, offset: number) => {
-    if (isVertical) updateScrollY(offset)
-    else updateScrollX(offset)
-  }, [])
 
+  const updateScroll = (isVertical: boolean, scroll: number) => {
+    const { height: wrapHeight, width: wrapWidth } = wrapCoord
+    if (isVertical) {
+      console.log('$ - 2', viewDom.scrollHeight)
+
+      setScrollTop(scroll / (wrapHeight - thumbSize) * viewDom.scrollHeight)
+      lastScrollTop.current = scrollTop
+    } else setScrollLeft(scroll / (wrapWidth - thumbSize) * viewDom.scrollWidth)
+  }
+
+  // const flipToNextDOM = (isScrollDown: boolean, scrollTop: number) => {
+  //   console.log('isScrollDown', isScrollDown)
+  //   if (!viewDom || !wrapDom) return
+
+  //   const { height } = viewDom.getBoundingClientRect()
+  //   const children: HTMLElement[] = Array.from(viewDom.querySelectorAll('[data-fullpage]'))
+
+  //   const target = children.reduce((target: HTMLElement | null, child: HTMLElement) => {
+  //     if (target) return target
+  //     const { top, bottom } = child.getBoundingClientRect()
+  //     if (isScrollDown && top > 0) {
+  //       return child
+  //     } else if (!isScrollDown && bottom > 0 && bottom < height) {
+  //       return child
+  //     }
+  //     return target
+  //   }, null)
+
+  //   return target
+  // }
+
+  /**
+   * 页面初始渲染
+   */
+  useEffect(() => {
+    if (!wrapRef.current) return
+    // 初始化
+    console.log('初始 render')
+    lock.current = false
+    initScrollbar()
+  }, [children])
+
+  /**
+   * 侦听 resize 事件
+   */
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // console.log('============ useEffect-1 ================')
-      updateLock(false)
-      // console.log('lock', lock)
-      // 取消原生 drag 和 select 事件
-      // TODO: 还没有取消 bar 的 select 事件
-
       // 监听 resize 事件
-      window.onresize = initScrollbar
-      // 初始化
-      initScrollbar()
-
-      // console.log('============ useEffect-1 end ================')
-
+      window.onresize = () => {
+        initScrollbar()
+      }
       return () => {
         window.onresize = null
       }
     }
-  }, [recordKey, thumbSize])
+  })
 
   /**
    * 根据滚动条的偏移更新 view 容器的滚动偏移
    */
-  useEffect(() => {
-    if (typeof window !== 'undefined' && wrapperCoord.height) {
+  useLayoutEffect(() => {
+    const { height: wrapHeight, width: wrapWidth } = wrapCoord
+    if (typeof window !== 'undefined' && wrapHeight) {
       // console.log('============ useEffect-2 ================')
-      // console.log('lock', lock)
+      // console.log('scrollTop', scrollTop)
+      const barHeight = wrapHeight - thumbSize
+      const barWidth = wrapWidth - thumbSize
 
-      const wrapDom = wrapRef.current
-      if (!wrapDom) return
-
-      const barHeight = wrapperCoord.height - thumbSize
-      const barWidth = wrapperCoord.width - thumbSize
-
-      // console.log('?', recordKey, lock)
-      if (recordKey && !lock) {
-        // console.log('?!')
+      // 滚动至上次浏览的位置
+      if (!lock.current) {
         const lastScroll = getRecord()
-        // console.log('lastScroll', lastScroll)
         if (isNumber(lastScroll)) {
-          updateScrollY(lastScroll * barHeight / wrapDom.scrollHeight)
-          updateLock(true)
+          lastScrollTop.current = scrollTop
+
+
+          setScrollTop(lastScroll) // 同步更新
+          requireScrollingAnimate.current = true // 同步触发动画开始执行
         }
+        lock.current = true
+      } else {
+        // 执行父容器设置的回调
+        handlers.forEach((handler) => {
+          handler(scrollTop ?? NaN)
+        })
+        // 记录滚动位置
+        handleRecord(scrollTop)
       }
 
-      const scrollTop = scrollY / barHeight * wrapDom.scrollHeight
       wrapDom.scrollTop = scrollTop
-      console.log('scrollTop!!!!', wrapDom.scrollTop)
-      wrapDom.scrollLeft = scrollX / barWidth * wrapDom.scrollWidth
+      wrapDom.scrollLeft = scrollLeft
 
-      // 记录滚动条位置的回调
-      // console.log('handleRecord', lock)
-      if (lock) handleRecord(scrollTop)
+      // 根据 scrollTop 计算滚动条滑块距离顶端的高度
+      const scrollY = scrollTop / viewRef.current.scrollHeight * barHeight
+      const scrollX = scrollLeft / viewRef.current.scrollWidth * barWidth
+      setScrollY(scrollY)
+      setScrollX(scrollX)
+
+      // const scrollTop = scrollY / barHeight * wrapDom.scrollHeight
       // console.log('============ useEffect-2 end ================')
     }
-  }, [scrollX, scrollY, wrapperCoord])
+  }, [scrollLeft, scrollTop, wrapCoord])
 
-  // function scrollTo (x: number, y: number) {
-  //   const wrapDom = wrapRef.current!
-  //   // console.log(wrapDom.scrollTop)
-  //   wrapDom.scrollTo({
-  //     top: y,
-  //     left: x
-  //     // behavior: 'smooth'
-  //   })
-  //   // console.log(wrapDom.scrollTop)
-  // }
+  /**
+   * 滚动动画 Flip + animate 实现
+   */
+  useLayoutEffect(() => {
+    if (!requireScrollingAnimate.current) return
+
+    const delta = scrollTop - lastScrollTop.current
+    if (!delta) return
+    isScrolling.current = true
+
+    const animation = viewDom.animate([
+      { transform: `translateY(${delta}px)` },
+      { transform: 'translate(0)' }
+    ], {
+      duration: Math.min(Math.abs(delta), 1000),
+      easing: 'ease-in-out'
+    })
+
+    animation.onfinish = () => {
+      isScrolling.current = false
+    }
+
+    requireScrollingAnimate.current = false
+  }, [requireScrollingAnimate.current])
+
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined' && IntersectionObserver) {
+  //     const options = {
+  //       root: wrapDom,
+  //       threshold: [0.01, 0.99]
+  //     }
+  //     const handleIntersection: IntersectionObserverCallback = (entries, observer) => {
+  //       console.log('!!!!!!!!!!!!!!!!!!handleIntersection')
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           // 开始滚动到对应的 page
+  //           const elem = entry.target as HTMLElement
+  //           const ratio = entry.intersectionRatio
+  //           console.log('elem', elem)
+  //           console.log('ratio', ratio)
+  //           console.log('target', scrollTarget)
+  //           if (!scrollTarget && ratio < 0.1) {
+  //             wrapDom.addEventListener('wheel', preventDefaultCallback)
+  //             console.log('intersection, scroll to', elem)
+  //             setIsScrollFullPage(true)
+  //             setScrollTarget(elem)
+  //             entry.target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  //           } else if (entry.target === scrollTarget && ratio > 0.9) {
+  //             console.log('intersection, scroll finish', elem)
+  //             wrapDom.removeEventListener('wheel', preventDefaultCallback)
+  //             setIsScrollFullPage(false)
+  //             setScrollTarget(null)
+  //           }
+  //         }
+  //       })
+  //     }
+  //     const observer = new IntersectionObserver(handleIntersection, options)
+  //     const fullPageDOM = viewDom?.querySelectorAll('[data-fullpage]')
+  //     fullPageDOM?.forEach((item) => {observer.observe(item)})
+
+  //     return () => {
+  //       observer.disconnect()
+  //       wrapDom?.removeEventListener('wheel', preventDefaultCallback)
+  //     }
+  //   }
+  // }, [children, scrollTarget])
+
 
   // function scrollIntoView (elem: HTMLElement) {
   //   const wrapDom = wrapRef.current
@@ -169,27 +289,36 @@ export default function Scrollbar ({
 
   /**
    * 初始化 scrollbar
+   * Ref 是稳定不变的，setState 也是
    */
-  function initScrollbar () {
-    const wrapperDom = wrapRef.current
+  const initScrollbar = useMemo(() => useThrottle(() => {
+    const wrapDom = wrapRef.current
     const viewDom = viewRef.current
-
-    if (!wrapperDom || !viewDom) return
+    if (typeof window === 'undefined' || !wrapDom) return
 
     // 计算滚动条的长度 & 最大偏移量 & 是否溢出
-    const { left, top } = wrapperDom.getBoundingClientRect()
+    const { left, top } = wrapDom.getBoundingClientRect()
     // clientHeight / clientWidth 不包括滚动条的宽度
-    const { clientHeight: height, clientWidth: width } = wrapperDom
+    const { clientHeight: height, clientWidth: width } = wrapDom
     const { scrollHeight, scrollWidth } = viewDom
-    updateWrapperCoord({ left, top, width, height })
+
+    console.log('$ initScrollbar', height, width)
+    setWrapCoord({ left, top, width, height })
+
     // 解决 view 容器高度小于 wrap 容器的情况
-    updateHorizontalThumbWidth(Math.min(width / scrollWidth, 1) * (width - thumbSize))
-    updateVerticalThumbHeight(Math.min(height / scrollHeight, 1) * (height - thumbSize))
+    setHorizontalThumbWidth(Math.min(width / scrollWidth, 1) * (width - thumbSize))
+    setVerticalThumbHeight(Math.min(height / scrollHeight, 1) * (height - thumbSize))
+  }, 200), [])
+
+  const scrollTo = (scroll: number) => {
+    console.log('scroll', scroll)
+    setScrollTop(scroll)
+    lastScrollTop.current = scrollTop
+    requireScrollingAnimate.current = true
   }
 
   const handleMouseEnter = () => {showScrollbar()}
   const handleMouseLeave = () => {hideScrollbar()}
-
 
   return (
       <div
@@ -200,25 +329,26 @@ export default function Scrollbar ({
       >
         <div ref={wrapRef} className={ns.e('wrap')} style={wrapStyle} onScroll={handleScroll}>
           <div ref={viewRef} className={ns.e('view')}>
-            <LazyLoad container={wrapRef}>{children}</LazyLoad>
+            <ScrollToContext.Provider value={{ scrollTo, isScrolling }}>
+              {children}
+            </ScrollToContext.Provider>
           </div>
         </div>
         <ScrollbarContext.Provider value={{ updateScroll, size: thumbSize }}>
           <Thumb
             offset={scrollX}
             visible={alwaysVisible || thumbVisible}
-            barLength={wrapperCoord.width}
+            barLength={wrapCoord.width}
             thumbLength={horizontalThumbWidth}
           />
           <Thumb
             offset={scrollY}
             visible={alwaysVisible || thumbVisible}
-            barLength={wrapperCoord.height}
+            barLength={wrapCoord.height}
             thumbLength={verticalThumbHeight}
             isVertical
           />
         </ScrollbarContext.Provider>
-
     </div>
   )
 }
@@ -341,8 +471,7 @@ function thumb ({
     function handleMouseMove (event: MouseEvent) {
       const current = event[bar.clientCoord]
       // 点击事件
-      if (isClick && (Math.abs(current - start) >= 3))
-        isClick = false
+      if (isClick && (Math.abs(current - start) >= 3)) isClick = false
 
       window?.getSelection()?.removeAllRanges()
       moveTo(current)
@@ -409,4 +538,4 @@ function thumb ({
   )
 }
 
-const Thumb = React.memo(thumb)
+export const Thumb = React.memo(thumb)

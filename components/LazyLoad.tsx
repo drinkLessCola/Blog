@@ -1,16 +1,15 @@
+import { ScrollHandlerContext } from '@/context/ScrollHandlerContext'
+import { useForwardContext } from '@/hooks/useForwardRef'
 import useThrottle from '@/hooks/useThrottle'
-import { useCallback, useEffect, useState } from 'react'
-import type { PropsWithChildren, RefObject } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import type { PropsWithChildren } from 'react'
+import Scrollbar from './Scrollbar'
 
-interface LazyLoadProps {
-  // 解包的 dom 不是最新的
-  container: RefObject<HTMLElement> | null
-}
-
-export default function LazyLoad ({ children, container }: PropsWithChildren<LazyLoadProps>) {
+export default function LazyLoad ({ children }: PropsWithChildren) {
+  console.log('LazyLoad render')
   // const [containerCoord, updateContainerCoord] = useState({ top: 0, bottom: 0 })
-  const [containerDOM, updateContainerDOM] = useState<HTMLElement>()
   const [imageLoadedFinish, updateImageLoadedFinish] = useState(false)
+  const container = useRef<HTMLDivElement>(null)
 
   const loadImage = useCallback((imgDom: HTMLImageElement) => {
     if (!imgDom.dataset.src) return
@@ -27,10 +26,11 @@ export default function LazyLoad ({ children, container }: PropsWithChildren<Laz
     )
   }, [])
 
-  const handlePageScroll = useThrottle((event?: Event) => {
+  const handlePageScroll = useThrottle((scrollTop: number) => {
+    if (Number.isNaN(scrollTop)) return
+    const containerDOM = container.current
     if (!containerDOM) return
-    console.log('scroll~~~~~~~~~~~~~')
-    console.log(containerDOM)
+
     const rootCoord = containerDOM.getBoundingClientRect()
     const targetImage = containerDOM.querySelectorAll('img[data-src]')
 
@@ -42,8 +42,9 @@ export default function LazyLoad ({ children, container }: PropsWithChildren<Laz
     targetImage.forEach((img) => {
       const imgCoord = img.getBoundingClientRect()
       console.log(img)
-      if (checkImageVisible(imgCoord, rootCoord))
+      if (checkImageVisible(imgCoord, rootCoord)) {
         loadImage(img as HTMLImageElement)
+      }
 
     })
   }, 200)
@@ -73,24 +74,30 @@ export default function LazyLoad ({ children, container }: PropsWithChildren<Laz
   //   }
   // }, [container])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window !== 'undefined'/* && !IntersectionObserver*/) {
       updateImageLoadedFinish(false)
-      const containerDOM = container?.current ?? document.documentElement
-      updateContainerDOM(containerDOM)
       handlePageScroll()
     }
   }, [children])
 
-  useEffect(() => {
+  const handleScrollTopChange = useCallback((scrollTop: number) => {
     // if(!IntersectionObserver) {
     console.log('scrollTop change!')
     if (imageLoadedFinish) return
 
-    handlePageScroll()
+    handlePageScroll(scrollTop)
     // }
-  }, [containerDOM?.scrollTop])
+  }, [])
 
 
-  return <>{children}</>
+  return (
+    <ScrollHandlerContext.Provider value={useForwardContext(ScrollHandlerContext, handleScrollTopChange)}>
+      <div ref={container} style={{ height: '100%' }}>
+        <Scrollbar fitParent>
+          {children}
+        </Scrollbar>
+      </div>
+    </ScrollHandlerContext.Provider>
+  )
 }
