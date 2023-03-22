@@ -156,11 +156,9 @@ export default function Scrollbar ({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // 监听 resize 事件
-      window.onresize = () => {
-        initScrollbar()
-      }
+      window.addEventListener('resize', initScrollbar)
       return () => {
-        window.onresize = null
+        window.removeEventListener('resize', initScrollbar)
       }
     }
   })
@@ -189,7 +187,7 @@ export default function Scrollbar ({
         lock.current = true
       } else {
         // 执行父容器设置的回调
-        handlers.forEach((handler) => {
+        handlers.forEach(handler => {
           handler(scrollTop ?? NaN)
         })
         // 记录滚动位置
@@ -230,6 +228,10 @@ export default function Scrollbar ({
 
     animation.onfinish = () => {
       isScrolling.current = false
+    }
+
+    animation.oncancel = () => {
+      console.log('cancel!!!!!!!!!')
     }
 
     requireScrollingAnimate.current = false
@@ -311,10 +313,10 @@ export default function Scrollbar ({
   }, 200), [])
 
   const scrollTo = (scroll: number) => {
-    console.log('scroll', scroll)
+    console.log('scroll', scroll, requireScrollingAnimate.current)
     setScrollTop(scroll)
     lastScrollTop.current = scrollTop
-    requireScrollingAnimate.current = true
+    if (scroll !== scrollTop) requireScrollingAnimate.current = true
   }
 
   const handleMouseEnter = () => {showScrollbar()}
