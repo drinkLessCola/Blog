@@ -17,3 +17,18 @@ export interface IArticleProps {
   link: string
   children: string[] | null
 }
+
+
+export interface IArticleListItem {
+  articleId: string
+  title: string
+  description: string
+  path: string
+  createDate: string
+  tags: string[]
+}
+
+export interface IArticleListInDate {
+  date: string
+  articles: IArticleListItem[]
+}

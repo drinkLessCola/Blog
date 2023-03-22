@@ -11,11 +11,38 @@ import GitHubIcon from '@/public/icons/github.svg'
 import SvgIcon from '@/components/SvgIcon'
 import ArrowBack from '@/public/icons/arrowBack.svg'
 import ArrowForward from '@/public/icons/arrowForward.svg'
-import ArticleCard from '@/components/ArticleCard'
-import Pagination from '@/components/Pagenation'
 import { useEffect, useRef } from 'react'
+import { articleAPI } from './api/article'
+import type { GetServerSideProps, NextPage } from 'next'
+import type { IArticleListInDate } from '@/types/article'
+import ArticleList from '@/components/ArticleList'
 
-export default function Home () {
+
+export interface HomePageProps {
+  articleList: IArticleListInDate[]
+}
+
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
+  try {
+    const articleList = await articleAPI.getArticleInTimeOrder({ pageSize: 10, pageIdx: 1 })
+    console.log('articleList', articleList)
+
+    return {
+      props: {
+        articleList
+      }
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      props: {
+        articleList: []
+      }
+    }
+  }
+}
+
+const Home: NextPage<HomePageProps> = ({ articleList }) => {
   console.log('Home render')
   const ns = useNamespace('homeLayout')
 
@@ -30,7 +57,7 @@ export default function Home () {
         <Scrollbar fitParent>
           <FullPage>
             <Page1></Page1>
-            <Page2></Page2>
+            <Page2 articleList={articleList}></Page2>
             <footer className={ns.b('footer')} data-fullpage>
               <div className={ns.be('footer', 'beian')}>
                 <p>粤 ICP 备 2022111775 号</p>
@@ -58,7 +85,8 @@ const Page1 = () => {
 
 
 const MONTH_LABEL_MAP = ['JAN', 'FEB', 'MAT', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-const Page2 = () => {
+
+const Page2 = ({ articleList }: Pick<HomePageProps, 'articleList'>) => {
   const ns = useNamespace('homeLayout')
   const year = new Date().getFullYear()
   const menu = [
@@ -67,20 +95,6 @@ const Page2 = () => {
     { label: '施工中...', path: '/3' }
   ] as unknown as IMenuItem[]
 
-  const articles = [
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] },
-    { slug: 'this.md', title: 'this', desc: '《你不知道的 JavaScript》中 this 章节的笔记', tags: ['JavaScript', 'YouDontKnowJS'] }
-  ]
   const calendar = [2, 10, 15, 20, 3, 14, 5, 7, 9, 10, 2, 5]
 
   const navViewRef = useRef<HTMLElement>(null)
@@ -99,6 +113,7 @@ const Page2 = () => {
   return (
     <section className={useClassName(ns.b('main'))} data-fullpage >
       <nav className={ns.be('main', 'sidebar')}>
+        {/* InfoCard */}
         <div className={useClassName(ns.b('info'), ns.b('card'))}>
           <div className={ns.be('info', 'avatar')}>
             <img src="/avatar.png"></img>
@@ -112,6 +127,7 @@ const Page2 = () => {
             GitHub
           </a>
         </div>
+        {/* Calendar */}
         <div className={useClassName(ns.b('calendar'), ns.b('card'))}>
           <span className={useClassName(ns.be('calendar', 'year'))}> {year} 年</span>
           <span className={useClassName(ns.be('calendar', 'switch'))}>
@@ -130,19 +146,21 @@ const Page2 = () => {
       </nav>
 
       <main className={useClassName(ns.b('card'), ns.b('navView'))} ref={navViewRef}>
-        <Scrollbar fitParent>
-          {
-            articles.map((article) => (
-              <ArticleCard {...article} key={article.slug}></ArticleCard>
-            ))
-          }
-          <Pagination total={10} current={1}></Pagination>
-        </Scrollbar>
-        {/* <ul className={ns.be('navView', 'nav')}>
-          <li className="active">时间轴</li>
-          <li>归档</li>
-        </ul> */}
+        {/* <ScrollHandlerContext.Provider value={useForwardContext(ScrollHandlerContext, handleScroll)}> */}
+          <Scrollbar fitParent>
+            <ArticleList></ArticleList>
+          </Scrollbar>
+        {/* </ScrollHandlerContext.Provider> */}
+
+        {/*
+            <ul className={ns.be('navView', 'nav')}>
+              <li className="active">时间轴</li>
+              <li>归档</li>
+            </ul>
+        */}
       </main>
     </section>
   )
 }
+
+export default Home

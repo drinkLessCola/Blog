@@ -95,7 +95,7 @@ function attachAPI<T extends APISchema> (
       let url = apiPath.replace(prefix, '')
       const matchParams = url.match(PATH_PARAMS_PATTERN)
       if (matchParams) {
-        matchParams.forEach((match) => {
+        matchParams.forEach(match => {
           const key = match.replace(':', '')
           if (Reflect.has(_params, key)) {
             url = url.replace(match, Reflect.get(_params, key))
@@ -108,6 +108,7 @@ function attachAPI<T extends APISchema> (
         ? { data: _params }
         : { params: _params }
 
+      console.log('url', url)
       return await axios.request({
         url: encodeURI(url),
         method: method.toLowerCase() as Method,
@@ -129,8 +130,8 @@ export function createAxiosInstance<T extends APISchema> (requestConfig: CreateR
     headers
   })
 
-  axiosInstance.interceptors.request.use(async (config) => {
-    const headerHandlers = (_headerHandlers ?? []).map(async (handler) => {
+  axiosInstance.interceptors.request.use(async config => {
+    const headerHandlers = (_headerHandlers ?? []).map(async handler => {
       const mixHeaders = await handler(config)
       return Object.assign(config.headers ?? {}, mixHeaders)
     })
@@ -144,8 +145,8 @@ export function createAxiosInstance<T extends APISchema> (requestConfig: CreateR
       msg: string
       data: any
     }>) => {
-      const { data } = res.data
-
+      const { msg, code, data } = res.data
+      console.log(msg, code, data)
       // TODO message
       return data
     },

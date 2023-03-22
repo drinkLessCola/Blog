@@ -219,6 +219,7 @@ ul {
   flex: 1 1 auto;
   box-sizing: border-box;
   margin: 20px;
+  padding: 20px;
   // margin-top: 60px;
 
   @include e(nav) {

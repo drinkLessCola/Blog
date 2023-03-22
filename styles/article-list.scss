@@ -1,0 +1,18 @@
+@use './mixins/bem.scss' as *;
+@use './mixins/function.scss' as *;
+
+@include b(articleList) {
+
+
+}
+
+@include b(articleListBlock) {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 0;
+  
+  @include e(list) {
+    flex: 1;
+  }
+
+}

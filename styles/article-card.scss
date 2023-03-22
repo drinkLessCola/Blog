@@ -3,7 +3,8 @@
 @include b(articleCard) {
   // background: getCssVar('fill-color');
   // box-shadow: 0 0 12px 0 getCssVar('fill-color', 'alpha-dark');
-  padding: 15px 40px;
+  margin: 0 40px;
+  padding: 15px 0;
   
   // border-radius: 5px;
   font-family: Gilroy;
@@ -14,35 +15,22 @@
     color: getCssVar('text-color', 'primary');
   }
 
-  @include e(date) {
-    display: inline-block;
-    position: relative;
-    font-size: 30px;
-    :first-child {
-      display: inline-block;
-      transform: translate(-5px, -10px);
-    }
-    :last-child {
-      display: inline-block;
-      transform: translate(5px, 10px);
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(30deg);
-      height: 40px;
-      width: 1px;
-      background-color: black;
-
-    }
-  }
-
   @include e(description) {
     font-size: 16px;
     margin: 10px 0;
     color: getCssVar('text-color', 'hover');
+  }
+
+  & + & {
+    border-top: 1px solid getCssVar('fill-color', 'alpha-dark');
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    @include e(title) {
+      color: getCssVar('color-primary', 'darker');
+    }
   }
 }
 
@@ -63,5 +51,31 @@
     padding: 2px 5px;
     border-radius: 5px;
     margin: 0 2px;
+  }
+}
+
+@include b(date) {
+  display: inline-block;
+  margin: 20px 10px;
+  font-size: 30px;
+  font-family: Gilroy;
+  position: relative;
+  :first-child {
+    display: inline-block;
+    transform: translate(-5px, -10px);
+  }
+  :last-child {
+    display: inline-block;
+    transform: translate(5px, 10px);
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+    height: 40px;
+    width: 1px;
+    background-color: black;
   }
 }
