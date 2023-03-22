@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import { type IArticleMenuItem } from '@/types/article'
 import React, { type PropsWithChildren, useCallback, useEffect, useReducer, useState } from 'react'
 import { MenuContext } from '@/context/MenuContext'
-import { articleProxyAPI } from '../pages/api/article'
+import { articleAPI } from '../pages/api/article'
 import { type IMenuItem } from '@/components/Menu'
 import Folder from '@/public/icons/folder.svg'
 import Header from '@/components/Header'
@@ -49,7 +49,7 @@ export default function ArticlePageLayout ({ children }: PropsWithChildren) {
   }), [])
 
   useEffect(() => {
-    articleProxyAPI.getArticleMenu()
+    articleAPI.getArticleMenu()
       .then((rawMenu) => {
         const menu = handleMenu(rawMenu)
         console.log('getMenu', menu)
