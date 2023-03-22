@@ -1,0 +1,49 @@
+@use './mixins/bem.scss' as *;
+@use './mixins/function.scss' as *;
+
+@include b(load) {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: getCssVar('fill-color', 'alpha');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include e(indicator) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 40px;
+    height: 70px;
+  }
+}
+
+@keyframes loading-dash {
+  0% {
+    stroke-dasharray: 1, 250;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 55, 250;
+    stroke-dashoffset: -55px;
+  }
+  100% {
+    stroke-dasharray: 55, 250;
+    // stroke-dashoffset: -35px;
+    stroke-dashoffset: -110px;
+  }
+}
+
+.loading-circle {
+  animation: rotating 2s linear infinite;
+  .path {
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    stroke-dasharray: 30, 50;
+    animation: loading-dash 1.5s ease-in-out infinite;
+  }
+}
