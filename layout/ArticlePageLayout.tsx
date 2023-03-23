@@ -39,7 +39,7 @@ export default function ArticlePageLayout ({ children }: PropsWithChildren) {
   const closeSidebar = useCallback(() => {dispatch({ type: 'closeSidebar' })}, [])
   const openSidebar = useCallback(() => {dispatch({ type: 'openSidebar' })}, [])
   // 处理 menu 数据，为目录添加文件图标
-  const handleMenu = useCallback((rawMenu: IArticleMenuItem[]): IMenuItem[] => rawMenu.map((rawMenuItem) => {
+  const handleMenu = useCallback((rawMenu: IArticleMenuItem[]): IMenuItem[] => rawMenu.map(rawMenuItem => {
     const { isMenu, children } = rawMenuItem
     return {
       ...rawMenuItem,
@@ -50,7 +50,7 @@ export default function ArticlePageLayout ({ children }: PropsWithChildren) {
 
   useEffect(() => {
     articleAPI.getArticleMenu()
-      .then((rawMenu) => {
+      .then(rawMenu => {
         const menu = handleMenu(rawMenu)
         console.log('getMenu', menu)
         updateMenu(menu)
