@@ -12,12 +12,14 @@
   background-position:0 0;
   background-attachment: fixed;
   overflow: hidden;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
+
 
 @include b(homeLayoutMain) {
   position: relative;
