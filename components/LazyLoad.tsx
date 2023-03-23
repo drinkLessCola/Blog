@@ -39,7 +39,7 @@ export default function LazyLoad ({ children }: PropsWithChildren) {
       return
     }
 
-    targetImage.forEach((img) => {
+    targetImage.forEach(img => {
       const imgCoord = img.getBoundingClientRect()
       console.log(img)
       if (checkImageVisible(imgCoord, rootCoord)) {
