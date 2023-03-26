@@ -135,8 +135,8 @@ const Page2 = ({ children }: PropsWithChildren) => {
             <Menu menu={menu}></Menu>
           </section>
           <a className={ns.be('info', 'button')} role="button" href="/">
-            <SvgIcon><GitHubIcon /></SvgIcon>
-            GitHub
+            <SvgIcon size="1em"><GitHubIcon /></SvgIcon>
+            <span className={ns.be('info', 'buttonLabel')}>GitHub</span>
           </a>
         </div>
 

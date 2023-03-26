@@ -35,6 +35,7 @@
   width: 100vw;
   height: 100vh;
   display: flex;
+  overflow: hidden;
   // margin: 0;
   // scroll-snap-align: start;
 
@@ -62,6 +63,32 @@
   }
 }
 
+// 移动端适配
+@include b(homeLayoutMain) {
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+  }
+
+  // 平板
+  @include e(sidebar) {
+    @media screen and (max-width: 768px) {
+      min-width: 80px;
+      width: 80px;
+    }
+
+    // 移动端
+    @media screen and (max-width: 640px) {
+      min-width: unset;
+      width: 100%;
+      height: unset;
+      min-height: 320px;
+      padding: 20px;
+    }
+  }
+}
+
+
+
 .card {
   // margin: 10px;
   background-color: getCssVar('fill-color', 'alpha');
@@ -79,14 +106,28 @@
 }
 
 @include b(homeLayoutInfo) {
+  // display: flex;
+  // flex-direction: column;
+  display: grid;
+  grid-template:
+    "avatar" minmax(40px, 120px)
+    "username" 
+    "nav"
+    "button";
+
   width: 100%;
   padding: 20px 10px;
   margin-bottom: 20px;
   flex: 1;
   height: 0;
+  max-height: 420px;
+  transition: width .5s ease;
+
   @include e(avatar) {
+    grid-area: avatar;
     height: 100%;
-    flex: 1;
+    margin: 0 auto;
+    max-height: 120px;
     padding: 0;
     box-sizing: border-box;
     border-radius: 50%;
@@ -98,10 +139,13 @@
       object-fit: cover;
     }
   }
+
   @include e(username) {
+    grid-area: username;
     margin: 10px 0;
     font-size: 22px;
     font-weight: 500;
+    text-align: center;
     color: getCssVar('text-color', 'primary')
   }
   @include e(info) {
@@ -112,7 +156,9 @@
   }
 
   @include e(nav) {
+    grid-area: nav;
     width: 100%;
+    margin: 0 auto;
     flex: 1;
     padding: 10px 0;
     @include b(menuItem) {
@@ -124,13 +170,16 @@
         margin-left: 10px;
       }
 
+
       @include e(prefix) {
         font-size: 24px;
       }
     }
+
   }
 
   @include e(button) {
+    grid-area: button;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -152,9 +201,132 @@
   }
 }
 
+@include b(homeLayoutInfo) {
+
+  @media screen and (max-width: 768px) {
+    grid-template: 
+      "avatar" 1fr
+      "nav"  4fr
+      "button" 1fr;
+    padding: 0;
+    @include e(avatar) {
+      width: 40px;
+      max-height: 40px;
+    }
+    @include e(username) {
+      display: none;
+    }
+    @include e(nav) {
+      @include b(menuItem) {
+        @include e(label) {
+          display: none;
+        }
+      }
+    }
+
+    @include e(button) {
+      width: unset;
+      margin: 0 10px;
+      box-sizing: border-box;
+      padding: 10px;
+      i {
+        margin: 0;
+      }
+    }
+
+    @include e(buttonLabel) {
+      display: none;
+    }
+  }
+  // 移动端
+  @media screen and (max-width: 640px) {
+    height: 100%;
+    grid-template: 
+    "username username" 1fr
+    "avatar nav"  3fr
+    "button button" 1fr
+    / minmax(60px, 200px) minmax(180px, 1fr);
+    padding: 20px 10px;
+
+    @include e(avatar) {
+      display: block;
+      width: 100%;
+      max-width: 150px;
+      height: unset;
+      max-height: unset;
+      margin: auto auto;
+
+    }
+
+    // @include e(group) {
+    //   display: flex;
+    //   flex-direction: row;
+    //   width: 100%;
+    //   justify-content: space-between;
+    // }
+
+    @include e(username) {
+      display: block;
+      font-family: 'Kristen ITC';
+      color: getCssVar('color-black');
+      font-size: 18px;
+      position: relative;
+      margin-top: 0;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 80%;
+        height: 1px;
+        transform: scaleY(.6) translate(-50%, 10px);
+        background-color: getCssVar('fill-color', 'alpha-dark');
+      }
+    }
+
+    @include e(buttonLabel) {
+      display: inline;
+    }
+
+    @include e(nav) {
+      max-width: 200px;
+      @include b(menuItem) {
+        @include e(label) {
+          display: block;
+        }
+        @include e(prefix) {
+          transform: none;
+        }
+      }
+    }
+
+    @include e(button) {
+      margin: 0 auto;
+      margin-top: 10px;
+      width: 80%;
+      i {
+        margin: 0 10px;
+      }
+    }
+
+  }
+ 
+}
+
 @include b(homeLayoutCalendar) {
   width: 100%;
   height: 30vh;
+  max-height: 250px;
+
+  @media screen and (max-width: 768px) {
+    visibility: hidden;
+    position: absolute;
+    bottom: 20px;
+
+    width: 240px;
+    height: 200px;
+    z-index: 500;
+  }
 }
 
 @include b(calendar) {
@@ -245,6 +417,8 @@
     font-weight: 500;
     color: getCssVar('text-color', 'regular')
   }
+
+
 }
 
 @include b(homeLayoutNavView) {
@@ -287,6 +461,16 @@
       }
     }
   }
+
+  @media screen and (max-width: 640px) {
+    flex: 0;
+    width: calc(100% - 40px);
+    height: unset;
+    margin: auto auto;
+    padding: 20px;
+    box-sizing: border-box;
+
+  }
 }
 
 @include b(homeLayoutHeader) {
@@ -307,13 +491,13 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 20px;
+    font-size: 14px;
     font-family: 'DIN light';
 
     h1 {
       margin: 0;
       padding: 0;
-      font-size: 6rem;
+      font-size: 4rem;
       font-family: Kristen ITC;
       text-shadow: 0 0 5px getCssVar('color-white');
     }
@@ -327,6 +511,11 @@
     font-family: 'DIN light';
     font-size: 15px;
   }
+
+  @media screen and (max-width: 640px) {
+    display: none;
+  }
+
 }
 
 @include b(homeLayoutFooter) {
