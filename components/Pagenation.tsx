@@ -11,6 +11,7 @@ export interface IPaginationProps {
 }
 
 function genRangeArr (start: number, end: number) {
+  if (end - start + 1 < 0) return []
   return new Array(end - start + 1).fill(0)
     .map((_, idx) => start + idx)
 }
@@ -41,7 +42,7 @@ export default function Pagination ({
   const [current, setCurrent] = useState(defaultCurrent)
   const centerPage = useMemo(
     () => genRangeArr(Math.max(2, current - 2), Math.min(total - 1, current + 2)),
-    [current]
+    [current, total]
   )
 
   const handlePrev = () => {
@@ -85,7 +86,7 @@ export default function Pagination ({
         ))
       }
       {current < total - 3 && <li className={ns.e('item')} key={'rightQuickPager'} onClick={handleRightQuickPageClick}>...</li>}
-      <li className={useClassName(ns.e('item'), ns.is('active', current === total))} key={total} onClick={handlePageClick.bind(null, total)}>{total}</li>
+      {total > 1 && <li className={useClassName(ns.e('item'), ns.is('active', current === total))} key={total} onClick={handlePageClick.bind(null, total)}>{total}</li>}
       <li className={ns.e('item')} onClick={handleNext}><SvgIcon><ArrowForward /></SvgIcon></li>
     </ul>
   )

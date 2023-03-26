@@ -1,5 +1,5 @@
 import { useNamespace } from '@/hooks/useNamespace'
-import type { IArticleListInDate } from '@/types/article'
+import type { IArticleListInDateItem } from '@/types/article'
 import DateBlock from './DateBlock'
 import ArticleCard from './ArticleCard'
 import Pagination from './Pagenation'
@@ -9,13 +9,17 @@ import Loading from './Loading'
 
 export default function ArticleList () {
   const ns = useNamespace('articleList')
-  const [articleList, setArticleList] = useState<IArticleListInDate[]>([])
+  const [articleList, setArticleList] = useState<IArticleListInDateItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [total, setTotal] = useState<number>(1)
 
   const handlePageChange = (page: number) => {
     setIsLoading(true)
     articleAPI.getArticleInTimeOrder({ pageSize: 10, pageIdx: page })
-      .then(setArticleList)
+      .then(({ total, list }) => {
+        setArticleList(list)
+        setTotal(Math.ceil(total / 10))
+      })
       .catch(console.error)
       .finally(() => {
         setIsLoading(false)
@@ -43,7 +47,7 @@ export default function ArticleList () {
           ))
         }
         <Loading isLoading={isLoading}></Loading>
-      <Pagination total={10} defaultCurrent={1} onChange={handlePageChange}></Pagination>
+      <Pagination total={total} defaultCurrent={1} onChange={handlePageChange}></Pagination>
     </div>
   )
 }
