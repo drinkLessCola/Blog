@@ -8,18 +8,20 @@ export type IArticleCardProps = Pick<IArticleListItem, 'title' | 'path' | 'descr
 export default function ArticleCard ({ title, description, tags, path }: IArticleCardProps) {
   const ns = useNamespace('articleCard')
   return (
-    <Link className={ns.b()} href={`/articles/${path}`}>
-      <h1 className={ns.e('title')}>{title}</h1>
-      <p className={ns.e('description')}>{description}</p>
-      <div className={ns.b('tag')}>
-        <SvgIcon><TagIcon /></SvgIcon>
-        <ul className={ns.be('tag', 'list')}>
-          {
-            tags.map(tag => (
-              <li className={ns.be('tag', 'item')} key={tag}>{tag}</li>
-            ))
-          }
-        </ul>
+    <Link href={`/articles/${path}`}>
+      <div className={ns.b()}>
+        <h1 className={ns.e('title')}>{title}</h1>
+        <p className={ns.e('description')}>{description}</p>
+        <div className={ns.b('tag')}>
+          <SvgIcon><TagIcon /></SvgIcon>
+          <ul className={ns.be('tag', 'list')}>
+            {
+              tags.map(tag => (
+                <li className={ns.be('tag', 'item')} key={tag}>{tag}</li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
     </Link>
   )

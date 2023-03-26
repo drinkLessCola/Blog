@@ -3,16 +3,20 @@
 @include b(articleCard) {
   // background: getCssVar('fill-color');
   // box-shadow: 0 0 12px 0 getCssVar('fill-color', 'alpha-dark');
-  margin: 0 40px;
-  padding: 15px 0;
-  
+  margin: 0 30px;
+  padding: 15px 10px;
   // border-radius: 5px;
   font-family: Gilroy;
+  transition: transform .1s ease;
 
   @include e(title) {
     margin: 10px 5px;
     font-size: 22px;
     color: getCssVar('text-color', 'primary');
+    word-break: break-all;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   @include e(description) {
@@ -21,16 +25,9 @@
     color: getCssVar('text-color', 'hover');
   }
 
-  & + & {
-    border-top: 1px solid getCssVar('fill-color', 'alpha-dark');
-  }
-
   &:hover {
     cursor: pointer;
-
-    @include e(title) {
-      color: getCssVar('color-primary', 'darker');
-    }
+    transform: translateX(5px);
   }
 }
 
@@ -55,11 +52,16 @@
 }
 
 @include b(date) {
-  display: inline-block;
-  margin: 20px 10px;
+  margin: 20px 0;
+  min-width: 75px;
   font-size: 30px;
   font-family: Gilroy;
   position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   :first-child {
     display: inline-block;
     transform: translate(-5px, -10px);
