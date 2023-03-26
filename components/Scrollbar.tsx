@@ -322,6 +322,41 @@ export default function Scrollbar ({
   const handleMouseEnter = () => {showScrollbar()}
   const handleMouseLeave = () => {hideScrollbar()}
 
+
+  // const scroll = useThrottle((event: WheelEvent) => {
+  //   console.log('& scroll')
+  //   const wrap = wrapRef.current
+  //   const oldScrollTop = wrap.scrollTop
+  //   const isScrollDown = event.deltaY > 0
+  //   if (isScrollDown) {
+  //     // setScrollTop(scrollTop + 64)
+  //     wrap.scrollTo({
+  //       top: oldScrollTop + 200,
+  //       behavior: 'smooth'
+  //     })
+  //   } else {
+  //     wrap.scrollTo({
+  //       top: Math.max(0, oldScrollTop - 200),
+  //       behavior: 'smooth'
+  //     })
+  //   }
+  // }, 200)
+
+  // const handleWheel = useCallback((event: WheelEvent) => {
+  //   event.preventDefault()
+  //   scroll(event)
+  // }, [scrollTop])
+
+  // // 阻止原生的滚动事件
+  // useEffect(() => {
+  //   const wrap = wrapRef.current
+  //   if (!wrap) return
+  //   wrap.addEventListener('wheel', handleWheel, { passive: false })
+  //   return () => {
+  //     wrap.removeEventListener('wheel', handleWheel)
+  //   }
+  // })
+
   return (
       <div
         className={ns.b()}
