@@ -22,11 +22,9 @@ export default function FullPage ({ children }: PropsWithChildren) {
   }
 
   const handleScroll = (event: WheelEvent) => {
-    console.log('FullPage scroll!', event.currentTarget, event.target)
     event.preventDefault()
     if (isScrolling.current) return
     const isScrollDown = event.deltaY > 0
-    console.log(isScrollDown)
     if (isScrollDown) {
       const nextPage = pageIndex.current + 1
       scrollToPage(nextPage)
@@ -37,7 +35,6 @@ export default function FullPage ({ children }: PropsWithChildren) {
   }
 
   const handleResize = () => {
-    console.log('handleResize')
     scrollToPage(pageIndex.current)
   }
   useEffect(() => {

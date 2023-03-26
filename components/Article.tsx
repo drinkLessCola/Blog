@@ -6,7 +6,6 @@ export interface IArticleProps {
 
 export default function Article ({ html }: IArticleProps) {
   const ns = useNamespace('article')
-  console.log('Article', html)
   return (
     <article className={ns.b()} dangerouslySetInnerHTML={{ __html: html }}/>
   )
