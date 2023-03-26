@@ -46,7 +46,14 @@ interface ArticleSchema extends APISchema {
       pageSize: number
       pageIdx: number
     }
-    response: IArticleListInDate[]
+    response: IArticleListInDate
+  }
+
+  getArticleMonthData: {
+    request: {
+      year: number
+    }
+    response: number[]
   }
 }
 
@@ -60,7 +67,8 @@ export const articleAPI = createAxiosInstance<ArticleSchema>({
     },
     getArticleSlug: 'GET /slug',
     getArticleByPath: 'GET /:path',
-    getArticleInTimeOrder: 'GET /listInTimeOrder/:pageSize/:pageIdx'
+    getArticleInTimeOrder: 'GET /listInTimeOrder/:pageSize/:pageIdx',
+    getArticleMonthData: 'GET /monthData/:year'
     // getCache: () => {
     //   const res = JSON.parse(window.localStorage.getItem('cache') || 'null')
     //   return Promise.resolve(res)
