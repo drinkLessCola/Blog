@@ -64,7 +64,6 @@ const nextConfig = {
     return config
   },
   async rewrites () {
-    console.log('rewrites')
     return {
       fallback: [
         { source: '/api/article/:path*', destination: 'https://summerblink.site/blog/article/:path*' }

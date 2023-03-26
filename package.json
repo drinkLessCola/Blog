@@ -23,6 +23,7 @@
     "http-proxy-middleware": "^2.0.6",
     "markdown-it": "^13.0.1",
     "markdown-it-mark": "^3.0.1",
+    "mockjs": "^1.1.0",
     "next": "^13.2.1",
     "nextcloud-link": "^1.2.9",
     "react": "^18.2.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",
     "@types/markdown-it": "^12.2.3",
+    "@types/mockjs": "^1.0.7",
     "@types/node": "^18.14.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
