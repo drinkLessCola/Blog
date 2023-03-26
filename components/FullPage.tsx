@@ -1,4 +1,5 @@
 import { ScrollToContext } from '@/context/ScrollbarContext'
+import { preventDefaultCallback } from '@/utils/function'
 import { type PropsWithChildren, useRef, useEffect, useContext } from 'react'
 
 export default function FullPage ({ children }: PropsWithChildren) {
@@ -7,6 +8,7 @@ export default function FullPage ({ children }: PropsWithChildren) {
   const containerRef = useRef<HTMLDivElement>(null)
   const pageIndex = useRef(0)
   const { scrollTo, isScrolling } = useContext(ScrollToContext)
+  const touchStartY = useRef(0)
 
   function scrollToPage (idx: number) {
     const container = containerRef.current
@@ -21,10 +23,7 @@ export default function FullPage ({ children }: PropsWithChildren) {
     scrollTo(scrollTop)
   }
 
-  const handleScroll = (event: WheelEvent) => {
-    event.preventDefault()
-    if (isScrolling.current) return
-    const isScrollDown = event.deltaY > 0
+  const changePage = (isScrollDown: boolean) => {
     if (isScrollDown) {
       const nextPage = pageIndex.current + 1
       scrollToPage(nextPage)
@@ -34,18 +33,41 @@ export default function FullPage ({ children }: PropsWithChildren) {
     }
   }
 
+  const handleScroll = (event: WheelEvent) => {
+    event.preventDefault()
+    if (isScrolling.current) return
+    const isScrollDown = event.deltaY > 0
+    changePage(isScrollDown)
+  }
+
   const handleResize = () => {
     scrollToPage(pageIndex.current)
   }
+
+  const handleTouchStart = (event: TouchEvent) => {
+    touchStartY.current = event.touches[0].pageY
+  }
+  const handleTouchEnd = (event: TouchEvent) => {
+    const endY = event.changedTouches[0].pageY
+    const isScrollDown = endY - touchStartY.current < 0
+    changePage(isScrollDown)
+  }
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     window.addEventListener('resize', handleResize)
     container.addEventListener('wheel', handleScroll, { passive: false })
+    container.addEventListener('touchstart', handleTouchStart, { passive: false })
+    container.addEventListener('touchend', handleTouchEnd, { passive: false })
+    container.addEventListener('touchmove', preventDefaultCallback, { passive: false })
     return () => {
       window.removeEventListener('resize', handleResize)
       container.removeEventListener('wheel', handleScroll)
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+      container.removeEventListener('touchmove', preventDefaultCallback)
     }
   })
 
