@@ -28,7 +28,12 @@ export interface IArticleListItem {
   tags: string[]
 }
 
-export interface IArticleListInDate {
+export interface IArticleListInDateItem {
   date: string
   articles: IArticleListItem[]
+}
+
+export interface IArticleListInDate {
+  total: number
+  list: IArticleListInDateItem[]
 }
