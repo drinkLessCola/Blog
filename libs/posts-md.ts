@@ -29,6 +29,7 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
   highlight: (str: string, lang: string) => {
+    if (lang === 'vue') lang = 'html'
     if (lang && hljs.getLanguage(lang)) {
       try {
         const code = hljs.highlight(str, {
@@ -42,7 +43,7 @@ const md = new MarkdownIt({
       }
 
       const code: string = md.utils.escapeHtml(str)
-      return `<pre class="hljs"><code  data-codeblock>${code}</code></pre>`
+      return `<pre class="hljs"><code data-codeblock>${code}</code></pre>`
     }
   }
 }).use(require('markdown-it-mark'))
