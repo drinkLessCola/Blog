@@ -8,7 +8,6 @@ export default function About () {
         <title>About</title>
       </Head>
       <h1>About</h1>
-      <p>又菜又焦虑！</p>
     </Layout>
   )
 }
