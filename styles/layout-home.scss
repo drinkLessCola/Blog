@@ -6,6 +6,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-color: #0b0505;
 
   // background-image: url('/background-4@mini.jpg'), url('/background-4.jpg');
   // background-size: cover, cover;
@@ -18,14 +19,6 @@
     padding: 0;
   }
 
-  @include e(bg) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 }
 
 
@@ -36,6 +29,7 @@
   height: 100vh;
   display: flex;
   overflow: hidden;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), getCssVar('fill-color') 30%);
   // margin: 0;
   // scroll-snap-align: start;
 
@@ -55,7 +49,7 @@
     min-width: 240px;
     box-sizing: border-box;
     padding: 20px;
-    padding-right: 0;
+    padding-right: 10px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -67,6 +61,7 @@
     width: 0;
     box-sizing: border-box;
     padding: 20px;
+    padding-left: 10px;
     overflow: hidden;
   }
 }
@@ -191,8 +186,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: getCssVar('text-color', 'primary');
-    color: getCssVar('fill-color');
+    background-color: getCssVar('color-black');
+    color: getCssVar('color-white');
     border: none;
     width: 100%;
     padding: 10px;
@@ -251,7 +246,6 @@
   @media screen and (max-width: 640px) {
     height: 100%;
     grid-template: 
-    "username username" 1fr
     "avatar nav"  3fr
     "button button" 1fr
     / minmax(60px, 200px) minmax(180px, 1fr);
@@ -274,24 +268,24 @@
     //   justify-content: space-between;
     // }
 
-    @include e(username) {
-      display: block;
-      font-family: 'Kristen ITC';
-      color: getCssVar('color-black');
-      font-size: 18px;
-      position: relative;
-      margin-top: 0;
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 80%;
-        height: 1px;
-        transform: scaleY(.6) translate(-50%, 10px);
-        background-color: getCssVar('fill-color', 'alpha-dark');
-      }
-    }
+    // @include e(username) {
+    //   display: block;
+    //   font-family: 'Kristen ITC';
+    //   color: getCssVar('color-black');
+    //   font-size: 18px;
+    //   position: relative;
+    //   margin-top: 0;
+    //   &::after {
+    //     content: '';
+    //     position: absolute;
+    //     bottom: 0;
+    //     left: 50%;
+    //     width: 80%;
+    //     height: 1px;
+    //     transform: scaleY(.6) translate(-50%, 10px);
+    //     background-color: getCssVar('fill-color', 'alpha-dark');
+    //   }
+    // }
 
     @include e(buttonLabel) {
       display: inline;
@@ -479,48 +473,83 @@
   position:relative;
   width: 100vw;
   height: 100vh;
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: getCssVar('color-white');
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
   // scroll-snap-align: start;
   
-
-  @include e(title) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position:absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 14px;
-    font-family: DIN Light;
-
-    h1 {
-      margin: 0;
-      padding: 0;
-      font-size: 4rem;
-      font-family: Kristen ITC;
-      text-shadow: 0 0 5px getCssVar('color-white');
-    }
+  @include e(pic) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80vw;
+    height: 45vw;
+    max-width: 1200px;
+    max-height: 674px;
+    object-fit: contain;
   }
+
  
   @include e(beian) {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%);
+    width: 90vw;
     font-family: 'DIN light';
     font-size: 15px;
+    margin: 20px 0;
   }
 
   @media screen and (max-width: 640px) {
-    display: none;
+    @include e(pic) {
+      width: 120vh;
+      height: 67vh;
+      left: 0;
+    }
+
+    @include e(beian) {
+      text-align: center;
+    }
   }
 
 }
 
-@include b(homeLayoutFooter) {
-  width: 100vw;
-  height: 100vh;
+@include b(homeLayoutHeaderTitle) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 35vh;
+  width: 90vw;
+  font-size: 18px;
+  font-family: Kristen ITC;
+  text-shadow: 0 0 12px getCssVar('fill-color', 'alpha');
+  z-index: 1000;
+
+  @include e(name) {
+    margin: 0;
+    padding: 0;
+    font-size: 60px;
+    font-weight: 600;
+  }
+
+  @include e(description) {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+
+    span {
+      margin: 5px 0;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    font-size: 14px;
+
+    @include e(name) {
+      font-size: 40px;
+    }
+  }
 }

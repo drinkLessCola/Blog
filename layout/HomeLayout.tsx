@@ -14,7 +14,8 @@ import Draw from '@/public/icons/draw.svg'
 import JSIcon from '@/public/icons/js.svg'
 import GitHubIcon from '@/public/icons/github.svg'
 import Setting from '@/public/icons/setting.svg'
-import Image from 'next/image'
+import Image from '@/components/Image'
+// import Image from 'next/image'
 
 type IArticleMonthData = number[]
 export default function Home ({ children }: PropsWithChildren) {
@@ -28,27 +29,22 @@ export default function Home ({ children }: PropsWithChildren) {
   return (
   // <ScrollHandlerContext.Provider value={useForwardContext(ScrollHandlerContext, handleScrollTopChange)}>
       <Layout className={ns.b()}>
-        <Image
+        {/* <Image
           loading='eager'
           quality={100}
-          className={ns.e('bg')}
+          className={ns.e('pic')}
           alt="background"
-          src="/background-4.jpg"
+          src="/background-dark.jpg"
           placeholder="blur"
           blurDataURL='/background-4@mini.jpg'
           fill
-        ></Image>
+        ></Image> */}
         <Scrollbar fitParent>
           <FullPage>
             <Page1></Page1>
             <Page2>
               {children}
             </Page2>
-            <footer className={ns.b('footer')} data-fullpage>
-              <div className={ns.be('footer', 'beian')}>
-                <p>粤 ICP 备 2022111775 号</p>
-              </div>
-            </footer>
           </FullPage>
         </Scrollbar>
       </Layout>
@@ -61,11 +57,31 @@ const Page1 = () => {
   const ns = useNamespace('homeLayoutHeader')
   return (
     <section className={useClassName(ns.b())} data-fullpage>
-    <div className={ns.e('title')}>
-      <h1>DrinkLessCola</h1>
-      <p>a simple blog records front end learning note and life (maybe, I&lsquo;m lazy) </p>
-    </div>
-  </section>
+      <header>
+        <ul>
+          <li>时间轴</li>
+          <li>文章归档</li>
+          <li>GitHub</li>
+        </ul>
+      </header>
+      <div className={ns.e('pic')}>
+        <Image
+          alt="background"
+          src="/background-3.jpg"
+          thumb="/background@mini.jpg"
+        ></Image>
+      </div>
+      <div className={ns.b('title')}>
+        <h1 className={ns.be('title', 'name')}>DrinkLessCola</h1>
+        <div className={ns.be('title', 'description')}>
+          <span>👋 Welcome To My Blog!</span>
+          <span>😊 会记录一些前端学习相关的笔记 & 尝试一些技术</span>
+        </div>
+      </div>
+      <footer className={ns.e('beian')}>
+        <a href='https://beian.miit.gov.cn/' target='_blank' rel="noreferrer">粤 ICP 备 2022111775 号</a>
+      </footer>
+    </section>
   )
 }
 

@@ -9,7 +9,7 @@
   box-sizing: border-box;
   overflow: hidden;
   transition: grid-template-columns .3s linear;
-  background-image: url('/background-2.jpg');
+  background-image: url('/background-dark.jpg');
   background-size: contain;
 
   @media screen and (max-width: 1536px) {
@@ -55,7 +55,7 @@
   }
 
   @include when(wrap-sidebar) {
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 10000px) {
       grid-template-columns: 0 minmax(0, 1fr);
     }
 

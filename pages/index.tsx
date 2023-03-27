@@ -8,6 +8,7 @@ import type { IArticleListInDate, IArticleListInDateItem } from '@/types/article
 import { useNamespace } from '@/hooks/useNamespace'
 import DateBlock from '@/components/DateBlock'
 import ArticleCard from '@/components/ArticleCard'
+import Tab from '@/components/Tab'
 
 export interface articlePageProps {
   articleMonthData: Array<string | number>
@@ -60,7 +61,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>
   const heights = list.map(item => item.articles.length * itemHeight)
   return (
     <>
-      <h1>时间轴</h1>
+      <Tab/>
       <InfiniteList
         itemRender={listItemRender}
         total={total}
