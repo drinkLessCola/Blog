@@ -77,8 +77,11 @@ const Page2 = ({ children }: PropsWithChildren) => {
     { label: '博客管理', path: '/manage', prefix: <Setting /> }
   ] as unknown as IMenuItem[]
 
-  const navViewRef = useRef<HTMLElement>(null)
+  const navViewRef = useRef<HTMLDivElement>(null)
   const handleWheel = (event: WheelEvent) => {
+    event.stopPropagation()
+  }
+  const handleTouch = (event: TouchEvent) => {
     event.stopPropagation()
   }
 
@@ -102,6 +105,9 @@ const Page2 = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     navViewRef.current?.addEventListener('wheel', handleWheel)
+    navViewRef.current?.addEventListener('touchstart', handleTouch)
+    navViewRef.current?.addEventListener('touchmove', handleTouch)
+    navViewRef.current?.addEventListener('touchend', handleTouch)
     return () => {
       navViewRef.current?.removeEventListener('wheel', handleWheel)
     }
@@ -146,8 +152,8 @@ const Page2 = ({ children }: PropsWithChildren) => {
         </div>
       </nav>
 
-      <main className={ns.be('main', 'navView')} ref={navViewRef}>
-        <div className={useClassName(ns.b('navView'), 'card')}>
+      <main className={ns.be('main', 'navView')}>
+        <div className={useClassName(ns.b('navView'), 'card')} ref={navViewRef}>
           {children}
         </div>
       </main>
