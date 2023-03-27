@@ -11,7 +11,7 @@ $colors: (
   'primary': (
     // 'base': #f67b39,
     // 'base': #FFAA64,
-    'base': #fd9e6e,
+    'base': #ec7e65,
   ),
   'success': (
     'base': #2eb876,
@@ -52,6 +52,15 @@ $text-color: (
   'disabled': #acacac,
 );
 
+$text-color: (
+  'primary': #ddd,
+  'hover': #ccc,
+  'regular': #aaa,
+  'secondary': #999,
+  'placeholder': #888,
+  'disabled': #777,
+);
+
 $border-color: (
   'light': #e5e5e5,
   '': #d8d8d8,
@@ -68,6 +77,20 @@ $fill-color: (
   'blank': #fff,
   'alpha': rgba(232, 232, 232, 0.5),
   'alpha-dark': rgba(108, 108, 108, 0.2),
+);
+
+$fill-color: (
+  '': #333,
+  'light': #444,
+  'lighter': #555,
+  'extra-light': #666,
+  'dark': #222,
+  'darker': #141414,
+  'blank': #222,
+  'alpha': rgba(63, 63, 63, 0.5),
+  'alpha-dark': rgba(0, 0, 0, 0.3),
+  // 'alpha': rgba(63, 63, 63, 0.5),
+  // 'alpha-dark': rgba(108, 108, 108, 0.2),
 );
 
 $mix-color-name: (

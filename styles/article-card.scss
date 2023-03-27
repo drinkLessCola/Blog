@@ -78,6 +78,6 @@
     transform: translate(-50%, -50%) rotate(30deg);
     height: 40px;
     width: 1px;
-    background-color: black;
+    background-color: getCssVar('text-color', 'hover');
   }
 }

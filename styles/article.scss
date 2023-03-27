@@ -4,18 +4,17 @@
 @include b(article) {
   max-width: 800px;
   width:80%;
-  min-width: 400px;
   margin: 0 auto;
   // padding: 0 120px;
   box-sizing: border-box;
-  line-height: 1.2;
+  line-height: 1.5;
 
   // @media screen and (max-width: 768px) {
   //   padding: 10px;
   // }
 
   code:not([data-codeblock]) {
-    background-color: getCssVar('color-primary', 'light-9');
+    background-color: getCssVar('fill-color', 'alpha');
     color: getCssVar('color-primary');
     padding: 0 2px;
     border-radius: 5px;
@@ -41,7 +40,7 @@
   }
 
   mark {
-    background-color: getCssVar('color-mark');
+    background-color: getCssVar('color-primary');
     padding: 0 2px;
     border-radius: 2px;
 
