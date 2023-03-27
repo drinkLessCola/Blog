@@ -146,9 +146,12 @@ const Page2 = ({ children }: PropsWithChildren) => {
         </div>
       </nav>
 
-      <main className={useClassName(ns.b('navView'), 'card')} ref={navViewRef}>
+      <main className={ns.be('main', 'navView')} ref={navViewRef}>
+        <div className={useClassName(ns.b('navView'), 'card')}>
+          {children}
+        </div>
+      </main>
         {/* <ScrollHandlerContext.Provider value={useForwardContext(ScrollHandlerContext, handleScroll)}> */}
-        {children}
         {/* </ScrollHandlerContext.Provider> */}
 
         {/*
@@ -157,7 +160,6 @@ const Page2 = ({ children }: PropsWithChildren) => {
               <li>归档</li>
             </ul>
         */}
-      </main>
     </section>
   )
 }
