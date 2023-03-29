@@ -34,7 +34,7 @@
 @font-face {
   font-family: 'Kristen ITC';
   src: local('Kristen ITC'),
-  url('./ITCKRIST.TTF') format('TTF');
+  url('./ITCKRIST.TTF') format('truetype');
   font-display: swap;
   font-weight: normal;
   font-style: normal;
@@ -43,31 +43,31 @@
 @font-face {
   font-family: 'DIN';
   src: local('DIN'),
-  url('./DIN-REGULAR.OTF') format('otf');
+  url('./DIN-REGULAR.OTF') format('opentype');
   font-display: swap;
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'DIN';
+  font-family: 'DIN Light';
   src: local('DIN'),
-  url('./DIN-LIGHT.OTF') format('otf');
+  url('./DIN-LIGHT.OTF') format('opentype');
   font-display: swap;
   font-weight: 300;
 }
 @font-face {
-  font-family: 'DIN';
+  font-family: 'DIN Bold';
   src: local('DIN'),
-  url('./DIN-BOLD.OTF') format('otf');
+  url('./DIN-BOLD.OTF') format('opentype');
   font-display: swap;
   font-weight: bold;
   font-style: normal;
 }
 @font-face {
-  font-family: 'DIN';
+  font-family: 'DIN Bolder';
   src: local('DIN'),
-  url('./DIN-BLACK.OTF') format('otf');
+  url('./DIN-BLACK.OTF') format('opentype');
   font-display: swap;
   font-weight: bolder;
 }
