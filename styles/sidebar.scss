@@ -4,7 +4,7 @@
 
 @include b(sidebar) {
   grid-area: sidebar;
-  max-width: 400px;
+  max-width: 600px;
   padding: 8px 20px;
   box-sizing: border-box;
   // backdrop-filter: blur(8px);

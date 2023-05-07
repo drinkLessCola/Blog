@@ -12,6 +12,24 @@
   background-image: url('/background-dark.jpg');
   background-size: contain;
 
+  @media screen and (min-width: 1536px) {
+    grid-template-rows: minmax(50px, 5vh) minmax(0, 1fr);
+    grid-template-columns: 15vw minmax(0, 1fr);
+    grid-template-areas: 
+      "header header"
+      "sidebar main"
+      "footer footer"
+  }
+
+  @media screen and (max-width: 2560px) {
+    grid-template-rows: minmax(50px, 5vh) minmax(0, 1fr);
+    grid-template-columns: minmax(400px, 15vw) minmax(0, 1fr);
+    grid-template-areas: 
+      "header header"
+      "sidebar main"
+      "footer footer"
+  }
+
   @media screen and (max-width: 1536px) {
     grid-template-rows: 50px minmax(0, 1fr);
     grid-template-columns: minmax(200px, 320px) minmax(0, 1fr);
@@ -55,7 +73,7 @@
   }
 
   @include when(wrap-sidebar) {
-    @media screen and (max-width: 10000px) {
+    @media screen and (min-width: 768px) {
       grid-template-columns: 0 minmax(0, 1fr);
     }
 
